@@ -1,25 +1,20 @@
 package paquete;
-
 import java.util.ArrayList;
 import java.util.List;
+public class Serie extends Contenido{
 
-public class Serie Extends Contenido {
-private List<Temporada> indiceTemporadas;   // List<Temporada>
+private List<Temporada> temporadas;   // List<Temporada>
 
     public Serie() {
-        this.indiceTemporadas = new ArrayList<>();
-        this.setTipoDeContenido("Serie");
+        this.temporadas=new ArrayList<>();
     }
 
-    private void setTipoDeContenido(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTipoDeContenido'");
-    }
+    
 
     // --- Getters & Setters ---
-    public List<Temporada> getIndiceTemporadas() { return indiceTemporadas; }
-    public void setIndiceTemporadas(List<Temporada> indiceTemporadas) {
-        this.indiceTemporadas = indiceTemporadas;
+    public List<Temporada> getTemporadas() { return temporadas; }
+    public void setTemporadas(List<Temporada> temporadas) {
+        this.temporadas = temporadas;
     }
 }
 

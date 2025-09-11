@@ -3,37 +3,33 @@ package paquete;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contenido {
-     private String titulo;
-     private String descripcion;
-     private String director;
-     private List<String> actores;
-     private String genero;
-     private List<String> restriccionesGeograficas;    
-     private String tipoDeContenido;                    // por ej: documental,pelicula,etc.
-     private long id;
+public abstract class Contenido {
+    private String titulo;
+    private String descripcion;
+    private String director;
+    private List<String> actores;
+    private String genero;
+    private List<String> restriccionesGeograficas;
+    private String tipoDeContenido;
+    private long id;
 
-    
-     public Contenido() {
+    public Contenido() {
+        this.actores = new ArrayList<>();
         this.restriccionesGeograficas = new ArrayList<>();
-     }
-
-    public Contenido(String titulo, String genero, long id) {
-        this();
-        this.titulo = titulo;
-        this.genero = genero;
-        this.id = id;
     }
 
     // --- Getters & Setters ---
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public String getEnlaceLink() { return enlaceLink; }
-    public void setEnlaceLink(String enlaceLink) { this.enlaceLink = enlaceLink; }
-
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getDirector() { return director; }
+    public void setDirector(String director) { this.director = director; }
+
+    public List<String> getActores() { return actores; }
+    public void setActores(List<String> actores) { this.actores = actores; }
 
     public String getGenero() { return genero; }
     public void setGenero(String genero) { this.genero = genero; }
@@ -48,6 +44,28 @@ public class Contenido {
 
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
+
+    // --- Métodos para actores ---
+    public void agregarActor(String actor) {
+        if (actor != null && !actor.isEmpty() && !actores.contains(actor)) {
+            actores.add(actor);
+        }
+    }
+
+    public void eliminarActor(String actor) {
+        actores.remove(actor);
+    }
+
+    // --- Métodos para restricciones geográficas ---
+    public void agregarPaisDeRestriccionGeografica(String pais) {
+        if (pais != null && !pais.isEmpty() && !restriccionesGeograficas.contains(pais)) {
+            restriccionesGeograficas.add(pais);
+        }
+    }
+
+    public void eliminarPaisDeRestriccionGeografica(String pais) {
+        restriccionesGeograficas.remove(pais);
+    }
 
     @Override
     public String toString() {

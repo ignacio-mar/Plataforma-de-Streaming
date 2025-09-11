@@ -4,35 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Temporada {
-private List<Metraje> indiceCapitulos;   // List<Metraje>
-    private Integer cantidadDeEpisodios;     // Integer
-
+    private List<Metraje> capitulos;   
+    private Integer cantidadDeEpisodios;     
     public Temporada() {
-        this.indiceCapitulos = new ArrayList<>();
+        this.capitulos = new ArrayList<>();
         this.cantidadDeEpisodios = 0;
     }
 
-    // --- Métodos del diagrama ---
+    
     public boolean buscarCapitulo(String busqueda) {
-        // Busca por título (Metraje hereda 'titulo' de Contenido)
-        return indiceCapitulos.stream()
+       
+        return capitulos.stream()
                 .anyMatch(m -> m.getTitulo() != null &&
                                m.getTitulo().equalsIgnoreCase(busqueda));
     }
 
     public Metraje devolverCapitulo(int numeroCapitulo) { // 1..N
         int idx = numeroCapitulo - 1;
-        if (idx >= 0 && idx < indiceCapitulos.size()) {
-            return indiceCapitulos.get(idx);
+        if (idx >= 0 && idx < capitulos.size()) {
+            return capitulos.get(idx);
         }
         return null;
     }
 
     // --- Getters & Setters ---
-    public List<Metraje> getIndiceCapitulos() { return indiceCapitulos; }
-    public void setIndiceCapitulos(List<Metraje> indiceCapitulos) {
-        this.indiceCapitulos = indiceCapitulos;
-        this.cantidadDeEpisodios = (indiceCapitulos != null) ? indiceCapitulos.size() : 0;
+    public List<Metraje> getCapitulos() { return capitulos; }
+    public void setCapitulos(List<Metraje> capitulos) {
+        this.capitulos = capitulos;
+        this.cantidadDeEpisodios = (capitulos != null) ? capitulos.size() : 0;
     }
 
     public Integer getCantidadDeEpisodios() { return cantidadDeEpisodios; }

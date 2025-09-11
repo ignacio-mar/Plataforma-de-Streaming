@@ -2,32 +2,37 @@ package paquete;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Catalogo {
- private List<Contenido> listaDeContenidos;  // List<Contenido>
-    private int cantidadDeContenidos;           // integer
-
+ private List<Contenido> listaDeContenidos;  
+    private int cantidadDeContenidos;          
     public Catalogo() {
         this.listaDeContenidos = new ArrayList<>();
         this.cantidadDeContenidos = 0;
     }
 
-    // --- Métodos del diagrama ---
     public Contenido buscarContenido(String titulo) {
-        return listaDeContenidos.stream()
-                .filter(c -> c.getTitulo() != null && c.getTitulo().equalsIgnoreCase(titulo))
-                .findFirst()
-                .orElse(null);
+        int i = 0;
+        while (i < listaDeContenidos.size()) {
+            Contenido c = listaDeContenidos.get(i);
+            if (c.getTitulo() != null && c.getTitulo().equalsIgnoreCase(titulo)) {
+                return c;
+            }
+            i++;
+        }
+        return null;
     }
 
     public List<Contenido> devolverListaDeContenidos(String genero) {
-        return listaDeContenidos.stream()
-                .filter(c -> c.getGenero() != null && c.getGenero().equalsIgnoreCase(genero))
-                .collect(Collectors.toList());
+        List<Contenido> resultado = new ArrayList<>();
+        for (Contenido c : listaDeContenidos) {
+            if (c.getGenero() != null && c.getGenero().equalsIgnoreCase(genero)) {
+                resultado.add(c);
+            }
+        }
+        return resultado;
     }
 
-    // --- Utilidad básica ---
     public void agregarContenido(Contenido contenido) {
         this.listaDeContenidos.add(contenido);
         this.cantidadDeContenidos = this.listaDeContenidos.size();
@@ -43,4 +48,3 @@ public class Catalogo {
     public int getCantidadDeContenidos() { return cantidadDeContenidos; }
     public void setCantidadDeContenidos(int cantidadDeContenidos) { this.cantidadDeContenidos = cantidadDeContenidos; }
 }
-
