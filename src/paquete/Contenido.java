@@ -1,4 +1,8 @@
 package paquete;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase abstracta que representa un contenido audiovisual.
  * Contiene atributos comunes como título, descripción, director, actores,
@@ -9,13 +13,7 @@ package paquete;
  *
  * @author grupo32
  * @version 1.0
-
-
  */
-import java.util.ArrayList;
-import java.util.List;
-
-
 public abstract class Contenido {
     private String titulo;
     private String descripcion;
@@ -36,30 +34,119 @@ public abstract class Contenido {
     }
 
     // --- Getters & Setters ---
+
+    /**
+     * Obtiene el título del contenido.
+     *
+     * @return título asignado al contenido.
+     */
     public String getTitulo() { return titulo; }
+
+    /**
+     * Define el título del contenido.
+     *
+     * @param titulo nuevo título a establecer.
+     */
     public void setTitulo(String titulo) { this.titulo = titulo; }
 
+    /**
+     * Recupera la descripción general del contenido.
+     *
+     * @return descripción textual del contenido.
+     */
     public String getDescripcion() { return descripcion; }
+
+    /**
+     * Establece la descripción del contenido.
+     *
+     * @param descripcion texto descriptivo a asignar.
+     */
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
+    /**
+     * Devuelve el nombre del director asociado al contenido.
+     *
+     * @return director responsable de la obra.
+     */
     public String getDirector() { return director; }
+
+    /**
+     * Asigna el nombre del director del contenido.
+     *
+     * @param director nombre del director a almacenar.
+     */
     public void setDirector(String director) { this.director = director; }
 
+    /**
+     * Proporciona la lista de actores participantes.
+     *
+     * @return lista de nombres de actores.
+     */
     public List<String> getActores() { return actores; }
+
+    /**
+     * Reemplaza la lista de actores asociados al contenido.
+     *
+     * @param actores nueva lista de nombres de actores.
+     */
     public void setActores(List<String> actores) { this.actores = actores; }
 
+    /**
+     * Obtiene el género del contenido.
+     *
+     * @return nombre del género principal.
+     */
     public String getGenero() { return genero; }
+
+    /**
+     * Actualiza el género del contenido.
+     *
+     * @param genero etiqueta de género a establecer.
+     */
     public void setGenero(String genero) { this.genero = genero; }
 
+    /**
+     * Devuelve la lista de países en los que existe alguna restricción de visualización.
+     *
+     * @return lista de códigos o nombres de países restringidos.
+     */
     public List<String> getRestriccionesGeograficas() { return restriccionesGeograficas; }
+
+    /**
+     * Establece las restricciones geográficas asociadas al contenido.
+     *
+     * @param restriccionesGeograficas colección de países restringidos.
+     */
     public void setRestriccionesGeograficas(List<String> restriccionesGeograficas) {
         this.restriccionesGeograficas = restriccionesGeograficas;
     }
 
+    /**
+     * Obtiene el tipo de contenido representado (por ejemplo, serie o metraje).
+     *
+     * @return tipo de contenido configurado.
+     */
     public String getTipoDeContenido() { return tipoDeContenido; }
+
+    /**
+     * Define el tipo de contenido representado.
+     *
+     * @param tipoDeContenido descripción del tipo de contenido.
+     */
     public void setTipoDeContenido(String tipoDeContenido) { this.tipoDeContenido = tipoDeContenido; }
 
+    /**
+     * Obtiene el identificador único del contenido.
+     *
+     * @return identificador numérico asignado.
+     */
     public long getId() { return id; }
+
+    /**
+     * Establece el identificador único del contenido.
+     *
+     * @param id identificador a asignar.
+     */
     public void setId(long id) { this.id = id; }
 
     // --- Métodos para actores ---

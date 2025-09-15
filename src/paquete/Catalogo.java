@@ -1,16 +1,15 @@
 package paquete;
 
-/**
- * Representa un catálogo de contenidos multimedia.
- * Permite buscar contenidos, filtrar por género y agregar nuevos contenidos.
- * 
- * @author Grupo32 
- * @version 1.0
-
- */ 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa un catálogo de contenidos multimedia.
+ * Permite buscar contenidos, filtrar por género y agregar nuevos contenidos.
+ *
+ * @author Grupo32
+ * @version 1.0
+ */
 public class Catalogo {
     private List<Contenido> listaDeContenidos;  
     private int cantidadDeContenidos;          
@@ -33,8 +32,7 @@ public class Catalogo {
         int i = 0;
         while (i < listaDeContenidos.size()) {
             Contenido c = listaDeContenidos.get(i);
-            if (c.getTitulo() != null && c.getTitulo().
-            equalsIgnoreCase(titulo)) {
+            if (c.getTitulo() != null && c.getTitulo().equalsIgnoreCase(titulo)) {
                 return c;
             }
             i++;
@@ -69,12 +67,36 @@ public class Catalogo {
     }
 
     // --- Getters & Setters ---
+
+    /**
+     * Obtiene la lista completa de contenidos del catálogo.
+     *
+     * @return lista de contenidos registrados.
+     */
     public List<Contenido> getListaDeContenidos() { return listaDeContenidos; }
+
+    /**
+     * Reemplaza la lista completa de contenidos del catálogo.
+     * También actualiza la cantidad total de elementos registrados.
+     *
+     * @param listaDeContenidos nueva lista de contenidos a utilizar.
+     */
     public void setListaDeContenidos(List<Contenido> listaDeContenidos) {
         this.listaDeContenidos = listaDeContenidos;
         this.cantidadDeContenidos = (listaDeContenidos != null) ? listaDeContenidos.size() : 0;
     }
 
+    /**
+     * Devuelve la cantidad total de contenidos almacenados en el catálogo.
+     *
+     * @return número de contenidos cargados.
+     */
     public int getCantidadDeContenidos() { return cantidadDeContenidos; }
+
+    /**
+     * Establece manualmente la cantidad de contenidos del catálogo.
+     *
+     * @param cantidadDeContenidos nuevo valor para la cantidad total.
+     */
     public void setCantidadDeContenidos(int cantidadDeContenidos) { this.cantidadDeContenidos = cantidadDeContenidos; }
 }

@@ -1,20 +1,22 @@
 package paquete;
 
-/**
- * Representa una temporada de una serie, compuesta por una lista de capítulos (Metraje).
- * Proporciona métodos para buscar y devolver capítulos, así como para gestionar la cantidad de episodios.
- * 
- * @author Grupo32
- * @version 1.0
- */
-
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa una temporada de una serie, compuesta por una lista de capítulos (Metraje).
+ * Proporciona métodos para buscar y devolver capítulos, así como para gestionar la cantidad de episodios.
+ *
+ * @author Grupo32
+ * @version 1.0
+ */
 public class Temporada {
-    private List<Metraje> capitulos;   
-    private Integer cantidadDeEpisodios;     
+    private List<Metraje> capitulos;
+    private Integer cantidadDeEpisodios;
+
+    /**
+     * Crea una temporada vacía con cero episodios registrados inicialmente.
+     */
     public Temporada() {
         this.capitulos = new ArrayList<>();
         this.cantidadDeEpisodios = 0;
@@ -39,9 +41,9 @@ public class Temporada {
         return false;
     }
     
-    // devolverCapitulo
     /**
      * Devuelve el capítulo correspondiente al número especificado.
+     *
      * @param numeroCapitulo El número del capítulo (comenzando desde 1).
      * @return El objeto Metraje correspondiente al número de capítulo, o null si no existe.
      */
@@ -63,6 +65,12 @@ public class Temporada {
      * @return Una lista de objetos Metraje que representan los capítulos de la temporada.
      */
     public List<Metraje> getCapitulos() { return capitulos; }
+
+    /**
+     * Reemplaza la lista completa de capítulos de la temporada y actualiza la cantidad registrada.
+     *
+     * @param capitulos nueva colección de capítulos para la temporada.
+     */
     public void setCapitulos(List<Metraje> capitulos) {
         this.capitulos = capitulos;
         this.cantidadDeEpisodios = (capitulos != null) ? capitulos.size() : 0;
