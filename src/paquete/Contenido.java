@@ -1,8 +1,4 @@
 package paquete;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Clase abstracta que representa un contenido audiovisual.
  * Contiene atributos comunes como título, descripción, director, actores,
@@ -16,6 +12,10 @@ import java.util.List;
 
 
  */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public abstract class Contenido {
     private String titulo;
     private String descripcion;

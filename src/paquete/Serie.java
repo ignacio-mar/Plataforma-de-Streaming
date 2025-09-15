@@ -1,8 +1,5 @@
 package paquete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * La clase Serie representa un tipo de Contenido compuesto por varias temporadas.
  * Cada temporada puede incluir distintos episodios u otras características
@@ -15,9 +12,10 @@ import java.util.List;
  *
  * @author grupo32
  * @version 1.0
-
-
  */
+
+ import java.util.ArrayList;
+import java.util.List;
 public class Serie extends Contenido {
 
     private List<Temporada> temporadas;   // Lista de temporadas
