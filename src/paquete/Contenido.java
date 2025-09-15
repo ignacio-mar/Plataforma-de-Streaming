@@ -9,12 +9,7 @@ import java.util.List;
  * género, restricciones geográficas, tipo de contenido e identificador.
  *
  * Esta clase sirve como base para distintos tipos de contenidos,
- * por ejemplo películas, series o metrajes.
- *
- * Ejemplo de uso (a través de una subclase):
- * Contenido c = new Metraje();
- * c.setTitulo("Ejemplo");
- * c.agregarActor("Actor Principal");
+ * por ejemplo películas, series o documentales.
  *
  * @author grupo32
 
