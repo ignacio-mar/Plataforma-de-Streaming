@@ -3,6 +3,8 @@
  * Proporciona métodos para buscar y devolver capítulos, así como para gestionar la cantidad de episodios.
  * 
  * @author Grupo32
+ * @version 1.0
+
  */
 package paquete;
 
