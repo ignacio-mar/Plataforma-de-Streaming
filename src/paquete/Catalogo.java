@@ -15,7 +15,8 @@ public class Catalogo {
         int i = 0;
         while (i < listaDeContenidos.size()) {
             Contenido c = listaDeContenidos.get(i);
-            if (c.getTitulo() != null && c.getTitulo().equalsIgnoreCase(titulo)) {
+            if (c.getTitulo() != null && c.getTitulo().
+            equalsIgnoreCase(titulo)) {
                 return c;
             }
             i++;
