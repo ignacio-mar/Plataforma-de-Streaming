@@ -1,12 +1,13 @@
+package paquete;
+
 /**
  * Representa una temporada de una serie, compuesta por una lista de capítulos (Metraje).
  * Proporciona métodos para buscar y devolver capítulos, así como para gestionar la cantidad de episodios.
  * 
  * @author Grupo32
  * @version 1.0
-
  */
-package paquete;
+
 
 import java.util.ArrayList;
 import java.util.List;
