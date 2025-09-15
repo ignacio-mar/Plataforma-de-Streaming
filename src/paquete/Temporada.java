@@ -1,3 +1,9 @@
+/**
+ * Representa una temporada de una serie, compuesta por una lista de capítulos (Metraje).
+ * Proporciona métodos para buscar y devolver capítulos, así como para gestionar la cantidad de episodios.
+ * 
+ * @author Grupo32
+ */
 package paquete;
 
 import java.util.ArrayList;
@@ -10,30 +16,66 @@ public class Temporada {
         this.capitulos = new ArrayList<>();
         this.cantidadDeEpisodios = 0;
     }
-
     
+    /**
+     * Busca un capítulo por su título en la lista de capítulos.
+     *
+     * @param busqueda El título del capítulo a buscar.
+     * @return true si se encuentra un capítulo con el título especificado, false en caso contrario.
+     */
     public boolean buscarCapitulo(String busqueda) {
-       
-        return capitulos.stream()
-                .anyMatch(m -> m.getTitulo() != null &&
-                               m.getTitulo().equalsIgnoreCase(busqueda));
-    }
-
-    public Metraje devolverCapitulo(int numeroCapitulo) { // 1..N
-        int idx = numeroCapitulo - 1;
-        if (idx >= 0 && idx < capitulos.size()) {
-            return capitulos.get(idx);
+        if (busqueda == null || capitulos == null) {
+            return false;
         }
-        return null;
+        for (Metraje m : capitulos) {
+            if (m != null && m.getTitulo() != null &&
+                m.getTitulo().equalsIgnoreCase(busqueda)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // devolverCapitulo
+    /**
+     * Devuelve el capítulo correspondiente al número especificado.
+     * @param numeroCapitulo El número del capítulo (comenzando desde 1).
+     * @return El objeto Metraje correspondiente al número de capítulo, o null si no existe.
+     */
+    public Metraje devolverCapitulo(int numeroCapitulo) {
+        if (capitulos == null || numeroCapitulo <= 0) {
+            return null;
+        }
+        int idx = numeroCapitulo - 1;
+        if (idx < 0 || idx >= capitulos.size()) {
+            return null;
+        }
+        return capitulos.get(idx);
     }
 
-    // --- Getters & Setters ---
+
+    /**
+     * Obtiene la lista de capítulos de la temporada.
+     *
+     * @return Una lista de objetos Metraje que representan los capítulos de la temporada.
+     */
     public List<Metraje> getCapitulos() { return capitulos; }
     public void setCapitulos(List<Metraje> capitulos) {
         this.capitulos = capitulos;
         this.cantidadDeEpisodios = (capitulos != null) ? capitulos.size() : 0;
     }
-
+    
+    /**
+     * Obtiene la cantidad de episodios de la temporada.
+     *
+     * @return El número total de episodios en la temporada.
+     */
     public Integer getCantidadDeEpisodios() { return cantidadDeEpisodios; }
+
+    /**
+     * Establece la cantidad de episodios de la temporada.
+     *
+     * @param cantidadDeEpisodios El nuevo número total de episodios.
+     */
     public void setCantidadDeEpisodios(Integer cantidadDeEpisodios) { this.cantidadDeEpisodios = cantidadDeEpisodios; }
 }
