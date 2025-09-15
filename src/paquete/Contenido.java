@@ -12,6 +12,8 @@ import java.util.List;
  * por ejemplo películas, series o documentales.
  *
  * @author grupo32
+ * @version 1.0
+
 
  */
 public abstract class Contenido {

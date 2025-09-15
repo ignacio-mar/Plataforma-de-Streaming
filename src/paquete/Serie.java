@@ -14,6 +14,8 @@ import java.util.List;
  * s.getTemporadas().add(new Temporada(1));
  *
  * @author grupo32
+ * @version 1.0
+
 
  */
 public class Serie extends Contenido {

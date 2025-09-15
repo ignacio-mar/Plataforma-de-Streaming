@@ -13,6 +13,8 @@ package paquete;
  * System.out.println(m);
  *
  * @author Grupo32
+ * @version 1.0
+
  */
 public class Metraje extends Contenido {
     private Integer duracion;       // minutos

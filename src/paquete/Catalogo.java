@@ -4,7 +4,9 @@ package paquete;
  * Representa un catálogo de contenidos multimedia.
  * Permite buscar contenidos, filtrar por género y agregar nuevos contenidos.
  * 
- * @author Grupo32
+ * @author Grupo32 
+ * @version 1.0
+
  */
 import java.util.ArrayList;
 import java.util.List;
