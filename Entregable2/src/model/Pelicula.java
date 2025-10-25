@@ -1,4 +1,4 @@
-package Entidades;
+package model;
 
 public class Pelicula {
     private String nombreUsuario;
