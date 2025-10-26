@@ -72,17 +72,53 @@ public class Menu {
 
     private void altaPersona() throws SQLException {
         System.out.println("\n[Alta de Persona]");
-        int dni = leerEntero("DNI: ");
-
-        // Validación de DNI único (recomendado)
-        if (dpDao.buscarPorDni(dni).isPresent()) {
-            System.out.println("Ya existe una persona con DNI " + dni + ". Operación cancelada.");
-            return;
-        }
-
-        String nombre = leerTexto("Nombre(s): ");
-        String apellido = leerTexto("Apellido: ");
         
+        // DNI
+        int dni;
+        do {
+            dni = leerEntero("DNI: ");
+            if (dni <= 0) {
+                System.out.println("El DNI debe ser un número positivo.");
+                continue;
+            }
+            if (dpDao.buscarPorDni(dni).isPresent()) {
+                System.out.println("Ya existe una persona con DNI " + dni + ". Por favor, ingrese otro.");
+                continue;
+            }
+            break;
+        } while (true);
+
+        // Nombre
+        String nombre;
+        do {
+            nombre = leerTexto("Nombre(s): ");
+            if (nombre.isEmpty()) {
+                System.out.println("El nombre no puede estar vacío.");
+                continue;
+            }
+            if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                System.out.println("El nombre solo puede contener letras y espacios.");
+                continue;
+            }
+            break;
+        } while (true);
+
+        // Apellido
+        String apellido;
+        do {
+            apellido = leerTexto("Apellido: ");
+            if (apellido.isEmpty()) {
+                System.out.println("El apellido no puede estar vacío.");
+                continue;
+            }
+            if (!apellido.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                System.out.println("El apellido solo puede contener letras y espacios.");
+                continue;
+            }
+            break;
+        } while (true);
+        
+        // País
         System.out.println("Países disponibles:");
         for (Paises pais : Paises.values()) {
             System.out.println("- " + pais.name());
@@ -90,18 +126,55 @@ public class Menu {
         Paises pais = null;
         while (pais == null) {
             try {
-                pais = Paises.valueOf(leerTexto("País de residencia (escriba exactamente como aparece arriba): ").toUpperCase());
+                String paisInput = leerTexto("País de residencia (escriba exactamente como aparece arriba): ");
+                if (paisInput.isEmpty()) {
+                    System.out.println("Debe seleccionar un país.");
+                    continue;
+                }
+                pais = Paises.valueOf(paisInput.toUpperCase());
             } catch (IllegalArgumentException e) {
                 System.out.println("País inválido. Por favor, seleccione uno de la lista.");
             }
         }
         
-        String tel = leerTexto("Número de teléfono: ");
+        // Teléfono
+        String tel;
+        do {
+            tel = leerTexto("Número de teléfono: ");
+            if (tel.isEmpty()) {
+                System.out.println("El número de teléfono no puede estar vacío.");
+                continue;
+            }
+            break;
+        } while (true);
 
+        // Mostrar resumen y pedir confirmación
         DatosPersonales dp = new DatosPersonales(nombre, apellido, dni, pais, tel);
-        dp = dpDao.guardar(dp);
+        System.out.println("\nResumen de datos ingresados:");
+        System.out.println("============================");
+        System.out.println("DNI: " + dp.getDni());
+        System.out.println("Nombre: " + dp.getNombres());
+        System.out.println("Apellido: " + dp.getApellido());
+        System.out.println("País: " + dp.getPaisResidencia());
+        System.out.println("Teléfono: " + dp.getNumeroTelefono());
+        System.out.println("============================");
+        
+        String confirma;
+        do {
+            confirma = leerTexto("¿Desea guardar estos datos? (s/n): ").toLowerCase();
+            if (!confirma.equals("s") && !confirma.equals("n")) {
+                System.out.println("Por favor, responda 's' o 'n'");
+                continue;
+            }
+            break;
+        } while (true);
 
-        System.out.println("Persona guardada con ID: " + dp.getId());
+        if (confirma.equals("s")) {
+            dp = dpDao.guardar(dp);
+            System.out.println("Persona guardada con ID: " + dp.getId());
+        } else {
+            System.out.println("Operación cancelada.");
+        }
     }
 
     private void listarPersonas() throws SQLException {
