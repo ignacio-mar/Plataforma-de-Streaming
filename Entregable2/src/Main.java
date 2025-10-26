@@ -1,4 +1,5 @@
-
+package model;
+import db.Conexion;
 public class Main  {
     public static void main(String[] args) {
    var conexion = Conexion.getCon();

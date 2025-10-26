@@ -1,8 +1,8 @@
-package dao.implements;
+package dao.impl;
 
 import dao.DatosPersonalesDAO;
-import db.Conexion;
-import model.DatosPersonales;
+import dao.db.Conexion;
+import dao.model.DatosPersonales;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

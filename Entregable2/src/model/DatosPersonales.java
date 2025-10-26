@@ -1,6 +1,6 @@
 package model;
 
-import enums.Paises
+import model.Enums.Paises;
 
 public class DatosPersonales {
     private Integer id;       
@@ -29,7 +29,7 @@ public class DatosPersonales {
     public void setApellido(String apellido) { this.apellido = apellido; }
     public Integer getDni() { return dni; }
     public void setDni(Integer dni) { this.dni = dni; }
-    public String getPaisResidencia() { return paisResidencia; }
+    public Paises getPaisResidencia() { return paisResidencia; }
     public void setPaisResidencia(Paises paisResidencia) { this.paisResidencia = paisResidencia; }
     public String getNumeroTelefono() { return numeroTelefono; }
     public void setNumeroTelefono(String numeroTelefono) { this.numeroTelefono = numeroTelefono; }

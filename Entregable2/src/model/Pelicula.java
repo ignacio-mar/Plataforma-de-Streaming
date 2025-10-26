@@ -1,14 +1,15 @@
 package model;
 
-import enums.Genero
-import enums.Idiomas
+import model.Enums.Generos;
+import model.Enums.Idiomas;
+import java.util.List;
 
 public class Pelicula {
     private int id;
     private String titulo;
     private List<String> elenco;
     private String director;
-    private Genero genero;
+    private Generos genero;
     private double duracion;
     private List<Idiomas> audio;
     private List<Idiomas> subtitulos;
@@ -16,7 +17,7 @@ public class Pelicula {
     
     public Pelicula (){}
 
-    public Pelicula (String titulo, List<String> elenco, String director, Genero genero, double duracion, List<Idiomas> audio, List<Idiomas> subtitulos, String sinopsis)  {
+    public Pelicula (String titulo, List<String> elenco, String director, Generos genero, double duracion, List<Idiomas> audio, List<Idiomas> subtitulos, String sinopsis)  {
         this.titulo = titulo;
         this.elenco = elenco;
         this.director = director;
@@ -34,7 +35,7 @@ public class Pelicula {
         this.titulo = titulo;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -58,11 +59,11 @@ public class Pelicula {
         this.director = director;
     }
 
-    public String getGenero() {
+    public Generos getGenero() {
         return genero;
     }
 
-    public void setGenero(Genero genero) {
+    public void setGenero(Generos genero) {
         this.genero = genero;
     }
 
@@ -74,19 +75,19 @@ public class Pelicula {
         this.duracion = duracion;
     }
 
-    public List<String> getAudio() {
+    public List<Idiomas> getAudio() {
         return audio;
     }
 
-    public void setAudio(Idiomas audio) {
+    public void setAudio(List<Idiomas> audio) {
         this.audio = audio;
     }
 
-    public List<String> getSubtitulos() {
+    public List<Idiomas> getSubtitulos() {
         return subtitulos;
     }
 
-    public void setSubtitulos(Idiomas subtitulos) {
+    public void setSubtitulos(List<Idiomas> subtitulos) {
         this.subtitulos = subtitulos;
     }
 
