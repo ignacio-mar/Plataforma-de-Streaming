@@ -1,7 +1,12 @@
 package dao.impl;
 
 import dao.DatosPersonalesDAO;
+<<<<<<< HEAD
 import db.Conexion;
+=======
+import dao.db.Conexion;
+import dao.model.DatosPersonales;
+>>>>>>> e6552527140faf7d269962c83968fabcbba4253d
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

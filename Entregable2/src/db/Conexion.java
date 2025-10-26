@@ -1,5 +1,8 @@
 package db;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6552527140faf7d269962c83968fabcbba4253d
 import java.sql.Connection;
 import java.sql.DriverManager;
 
