@@ -2,22 +2,21 @@ package model;
 
 import model.Enums.Generos;
 import model.Enums.Idiomas;
-import java.util.List;
 
 public class Pelicula {
     private int id;
     private String titulo;
-    private List<String> elenco;
+    private String elenco;
     private String director;
     private Generos genero;
     private double duracion;
-    private List<Idiomas> audio;
-    private List<Idiomas> subtitulos;
+    private Idiomas audio;
+    private Idiomas subtitulos;
     private String sinopsis;
     
     public Pelicula (){}
 
-    public Pelicula (String titulo, List<String> elenco, String director, Generos genero, double duracion, List<Idiomas> audio, List<Idiomas> subtitulos, String sinopsis)  {
+    public Pelicula (String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
         this.titulo = titulo;
         this.elenco = elenco;
         this.director = director;
@@ -43,11 +42,11 @@ public class Pelicula {
         this.id = id;
     }
     
-    public List<String> getElenco() {
+    public String getElenco() {
         return elenco;
     }
 
-    public void setElenco(List<String> nuevoElenco) {
+    public void setElenco(String nuevoElenco) {
         this.elenco = nuevoElenco;
     }
 
@@ -75,19 +74,19 @@ public class Pelicula {
         this.duracion = duracion;
     }
 
-    public List<Idiomas> getAudio() {
+    public Idiomas getAudio() {
         return audio;
     }
 
-    public void setAudio(List<Idiomas> audio) {
+    public void setAudio(Idiomas audio) {
         this.audio = audio;
     }
 
-    public List<Idiomas> getSubtitulos() {
+    public Idiomas getSubtitulos() {
         return subtitulos;
     }
 
-    public void setSubtitulos(List<Idiomas> subtitulos) {
+    public void setSubtitulos(Idiomas subtitulos) {
         this.subtitulos = subtitulos;
     }
 
