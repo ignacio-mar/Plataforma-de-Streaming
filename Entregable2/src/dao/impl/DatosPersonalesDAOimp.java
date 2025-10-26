@@ -1,12 +1,12 @@
-package dao.impl;
+package impl;
 
 import dao.DatosPersonalesDAO;
 import db.Conexion;
+import model.DatosPersonales;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import model.DatosPersonales;
 import model.Enums.Paises;
 
 public class DatosPersonalesDAOimp implements DatosPersonalesDAO {

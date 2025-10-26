@@ -1,6 +1,6 @@
 package impl;
 
-import dao.PeliculasDAO;
+import PeliculasDAO;
 import db.Conexion;
 
 
