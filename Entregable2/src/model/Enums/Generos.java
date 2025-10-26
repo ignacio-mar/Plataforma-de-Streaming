@@ -1,16 +1,5 @@
-package model;
+package model.Enums;
 
-public class Enums{
-
-    public enum Genero{
-        ACCION, FICCION, COMEDIA, TERROR, ROMANTICA;
-    }
-
-    public enum Idiomas{
-        ESPAÑOL, INGLES, PORTUGUES, FRANCES;
-    }
-
-    public enum Paises{
-        ARGENTINA, BRASIL, EEUU, FRANCIA;
-    }
+public enum Paises {
+    ARGENTINA, BRASIL, EEUU, FRANCIA;
 }
