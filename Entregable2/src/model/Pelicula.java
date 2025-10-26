@@ -1,13 +1,8 @@
 package model;
 
-<<<<<<< HEAD
-import enums.Genero;
-import enums.Idiomas;
-=======
 import model.Enums.Generos;
 import model.Enums.Idiomas;
 import java.util.List;
->>>>>>> e6552527140faf7d269962c83968fabcbba4253d
 
 public class Pelicula {
     private int id;
