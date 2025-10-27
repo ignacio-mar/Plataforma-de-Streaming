@@ -4,26 +4,22 @@ import dao.DatosPersonalesDAO;
 import dao.PeliculasDAO;
 import dao.ReseñasDAO;
 import dao.UsuariosDAO;
+import dao.compar.ComparadorDuracion;
+import dao.compar.ComparadorGenero;
+import dao.compar.ComparadorTitulo;
+import dao.compar.ComparatorIdPelicula;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import model.DatosPersonales;
+import model.Pelicula;
+import model.Reseña;
+import model.Usuario;
 import model.enums.Generos;
 import model.enums.Idiomas;
 import model.enums.Paises;
-import model.Usuario;
-import model.Pelicula;
-import model.Reseña;
-import dao.compar.ComparatorIdPelicula;
-import dao.compar.ComparadorTitulo;
-import dao.compar.ComparadorGenero;
-import dao.compar.ComparadorDuracion;
-import dao.compar.ComparadorTitulo;
-import dao.compar.ComparadorGenero;
-import dao.compar.ComparadorDuracion;
 
 public class Menu {
 
@@ -818,68 +814,73 @@ private void altaPelicula() throws SQLException {
         }
     }
 
-   private void registrarReseña() throws SQLException {
-        System.out.println("\n[Registrar Reseña]");
-        
-        // 1. Validar usuario
-        System.out.println("Por favor, ingrese sus credenciales:");
-        String nombreUsuario = leerTexto("Nombre de usuario: ");
-        String contrasenia = leerTexto("Contraseña: ");
-        
-        Optional<Usuario> optUsuario = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
-        if (optUsuario.isEmpty() || !optUsuario.get().getContrasenia().equals(contrasenia)) {
-            System.out.println("Credenciales inválidas.");
-            return;
-        }
-        Usuario usuario = optUsuario.get();
-        
-        // 2. Mostrar películas disponibles ordenadas por ID
-        System.out.println("\nPelículas disponibles:");
-        List<Pelicula> peliculas = peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
-        if (peliculas.isEmpty()) {
-            System.out.println("No hay películas disponibles.");
-            return;
-        }
-        
-        for (Pelicula p : peliculas) {
-            System.out.printf("%d) %s%n", p.getId(), p.getTitulo());
-        }
-        
-        // 3. Seleccionar película
-        int idPelicula;
-        Optional<Pelicula> optPelicula;
-        do {
-            idPelicula = leerEntero("\nSeleccione el número de la película: ");
-            optPelicula = peliculas.stream()
-                                 .filter(p -> p.getId() == idPelicula)
-                                 .findFirst();
-            if (optPelicula.isEmpty()) {
-                System.out.println("Número de película inválido. Por favor, elija un número de la lista.");
-            } else {
-                break;
-            }
-        } while (true);
-        
-        // 4. Ingresar datos de la reseña
-        int calificacion;
-        do {
-            calificacion = leerEntero("Calificación (1-5): ");
-            if (calificacion < 1 || calificacion > 5) {
-                System.out.println("La calificación debe estar entre 1 y 5.");
-            } else {
-                break;
-            }
-        } while (true);
-        
-        String comentario = leerTexto("Comentario: ");
-        
-        // 5. Crear y guardar la reseña
-        Reseña nuevaReseña = new Reseña(calificacion, comentario, usuario.getId(), idPelicula);
-        reseñasDao.registrar(nuevaReseña);
-        
-        System.out.println("¡Reseña registrada con éxito!");
+ private void registrarReseña() throws SQLException {
+    System.out.println("\n[Registrar Reseña]");
+
+    // 1️⃣ Validar usuario
+    System.out.println("Por favor, ingrese sus credenciales:");
+    String nombreUsuario = leerTexto("Nombre de usuario: ");
+    String contrasenia = leerTexto("Contraseña: ");
+
+    Optional<Usuario> optUsuario = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
+    if (optUsuario.isEmpty() || !optUsuario.get().getContrasenia().equals(contrasenia)) {
+        System.out.println("Credenciales inválidas.");
+        return;
+    }
+    Usuario usuario = optUsuario.get();
+
+    // 2️⃣ Mostrar películas disponibles ordenadas por ID
+    System.out.println("\nPelículas disponibles:");
+    List<Pelicula> peliculas = peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
+    if (peliculas.isEmpty()) {
+        System.out.println("No hay películas disponibles.");
+        return;
     }
 
+    for (Pelicula p : peliculas) {
+        System.out.printf("%d) %s%n", p.getId(), p.getTitulo());
+    }
+
+    // 3️⃣ Seleccionar película (sin usar lambdas)
+    int idPelicula;
+    Optional<Pelicula> optPelicula;
+    do {
+        idPelicula = leerEntero("\nSeleccione el número de la película: ");
+        optPelicula = Optional.empty();
+
+        for (Pelicula p : peliculas) {
+            if (p.getId() == idPelicula) {
+                optPelicula = Optional.of(p);
+                break;
+            }
+        }
+
+        if (optPelicula.isEmpty()) {
+            System.out.println("Número de película inválido. Por favor, elija un número de la lista.");
+        } else {
+            break;
+        }
+    } while (true);
+
+    // 4️⃣ Ingresar datos de la reseña
+    int calificacion;
+    while (true) {
+        calificacion = leerEntero("Calificación (1-5): ");
+        if (calificacion < 1 || calificacion > 5) {
+            System.out.println("La calificación debe estar entre 1 y 5.");
+        } else {
+            break;
+        }
+    }
+
+    String comentario = leerTexto("Comentario: ");
+
+    // 5️⃣ Crear y guardar la reseña
+    Reseña nuevaReseña = new Reseña(calificacion, comentario, usuario.getId(), idPelicula);
+    reseñasDao.registrar(nuevaReseña);
+
+    System.out.println("¡Reseña registrada con éxito!");
+}
 
     private void aprobarReseña() throws SQLException {
         System.out.println("\n[Aprobar Reseña]");
