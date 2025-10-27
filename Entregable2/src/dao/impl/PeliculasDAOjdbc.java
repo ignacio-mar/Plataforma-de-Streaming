@@ -13,9 +13,9 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
     // Implementación de los métodos del DAO para Películas utilizando JDBC
 
     private static final String INSERT_SQL =
-        "INSERT INTO PELICULAS (TITULO, ELENCO, DIRECTOR, GENERO, DURACION, AUDIO, SUBTITULOS, SINOPSIS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO PELICULA (TITULO, ELENCO, DIRECTOR, GENERO, DURACION, AUDIO, SUBTITULOS, SINOPSIS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_ALL_SQL =
-        "SELECT ID, TITULO, ELENCO, DIRECTOR, GENERO, DURACION, AUDIO, SUBTITULOS, SINOPSIS FROM PELICULAS";
+        "SELECT ID, TITULO, ELENCO, DIRECTOR, GENERO, DURACION, AUDIO, SUBTITULOS, SINOPSIS FROM PELICULA";
     
 
 

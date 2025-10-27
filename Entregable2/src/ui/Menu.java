@@ -881,7 +881,6 @@ private void altaPelicula() throws SQLException {
 
     System.out.println("¡Reseña registrada con éxito!");
 }
-
     private void aprobarReseña() throws SQLException {
         System.out.println("\n[Aprobar Reseña]");
         
