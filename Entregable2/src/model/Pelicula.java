@@ -101,4 +101,11 @@ public class Pelicula {
         this.sinopsis = sinopsis;
     }
 
+    @Override
+    public String toString() {
+        return "Pelicula [id=" + id + ", titulo=" + titulo + ", elenco=" + elenco + ", director=" + director
+                + ", genero=" + genero + ", duracion=" + duracion + ", audio=" + audio + ", subtitulos=" + subtitulos
+                + ", sinopsis=" + sinopsis + "]";
+    }
+    
 }
