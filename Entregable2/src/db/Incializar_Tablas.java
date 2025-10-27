@@ -21,11 +21,14 @@ public class Incializar_Tablas {
 
         sql = "CREATE TABLE IF NOT EXISTS PELICULA (" +
                 "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "GENERO TEXT(1) NOT NULL," +
                 "TITULO TEXT(100) NOT NULL," +
-                "RESUMEN TEXT(500)," +
-                "DIRECTOR TEXT(100) NOT NULL," +
-                "DURACION REAL NOT NULL" +
+                "ELENCO TEXT(500) NOT NULL," +
+                "DIRECTOR TEXT(100) NOT NULL,"+
+                 "GENERO TEXT(100) NOT NULL,"+
+                 "DURACION REAL NOT NULL"+
+                 "AUDIO TEXT(100) NOT NULL,"+
+                "SUBTITULOS TEXT(100) NOT NULL,"+
+                 "SINOPSIS TEXT(500)," +
                 ");";
         stmt.executeUpdate(sql);
 

@@ -1,10 +1,9 @@
-package model;
+ package model;
 
-import model.enums.Generos;
-import model.enums.Idiomas;
+import model.Enums.Generos;
+import model.Enums.Idiomas;
 
 public class Pelicula {
-    //atributos de la clase Pelicula
     private int id;
     private String titulo;
     private String elenco;
@@ -15,20 +14,20 @@ public class Pelicula {
     private Idiomas subtitulos;
     private String sinopsis;
     
-    //Constructores
     public Pelicula (){}
 
-    public Pelicula (String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
+    public Pelicula (int id,String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
+        this.id=id;
         this.titulo = titulo;
         this.elenco = elenco;
         this.director = director;
         this.genero = genero;
         this.duracion = duracion;
         this.audio = audio;
+        this.subtitulos = subtitulos;
         this.sinopsis = sinopsis;
     }
 
-    //Setters y getters
     public String getTitulo() {
         return titulo;
     }
@@ -101,11 +100,4 @@ public class Pelicula {
         this.sinopsis = sinopsis;
     }
 
-    @Override
-    public String toString() {
-        return "Pelicula [id=" + id + ", titulo=" + titulo + ", elenco=" + elenco + ", director=" + director
-                + ", genero=" + genero + ", duracion=" + duracion + ", audio=" + audio + ", subtitulos=" + subtitulos
-                + ", sinopsis=" + sinopsis + "]";
-    }
-    
 }
