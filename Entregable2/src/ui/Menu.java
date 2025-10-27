@@ -615,236 +615,218 @@ public class Menu {
 
     }
     // ===== OPERACIONES PELICULAS =====
+private void altaPelicula() throws SQLException {
+    System.out.println("\n[Alta de Pelicula]");
 
-    private void altaPelicula() throws SQLException {
-        System.out.println("\n[Alta de Pelicula]");
-        
-        // Titulo
-        String titulo;
-        do {
-          titulo = leerTexto("Titulo: ");
-             if (titulo.isEmpty()) {
-                System.out.println("El titulo no puede estar vacío.");
-                continue;
-            }
-            break;
-        } while (true);
-
-        // Elenco
-        String elenco;
-        do {
-            elenco = leerTexto("Elenco (separado por comas, ej: Actor A, Actor B, ...): ");
-            if (elenco.isEmpty()) {
-                System.out.println("El elenco no puede estar vacío.");
-                continue;
-             }
-            if (!elenco.contains(",")) {
-                System.out.println("Por favor, ingrese múltiples nombres separados por comas (ej: Nombre1, Nombre2).");
-                continue;
-            }
-             break;
-            } while (true);
-
-        // Director
-        String director;
-        do {
-            director = leerTexto("DIrector: ");
-            if (director.isEmpty()) {
-                System.out.println("El director no puede estar vacío.");
-                continue;
-            }
-            if (!director.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
-                System.out.println("El apellido solo puede contener letras y espacios.");
-                continue;
-            }
-            break;
-        } while (true);
-        
-        // Genero
-        System.out.println("Generos disponibles:");
-        for (Generos genero : Generos.values()) {
-            System.out.println("- " + genero.name());
+    // ---- Título ----
+    String titulo;
+    while (true) {
+        titulo = leerTexto("Titulo: ");
+        if (titulo.isEmpty()) {
+            System.out.println("El titulo no puede estar vacío.");
+            continue;
         }
-        Generos genero = null;
-        while (genero == null) {
-            try {
-                String generoInput = leerTexto("Genero (escriba exactamente como aparece arriba): ");
-                if (generoInput.isEmpty()) {
-                    System.out.println("Debe seleccionar un genero.");
-                    continue;
-                }
-                genero = Generos.valueOf(generoInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.out.println("Genero inválido. Por favor, seleccione uno de la lista.");
-            }
+        break;
+    }
+
+    // ---- Elenco ----
+    String elenco;
+    while (true) {
+        elenco = leerTexto("Elenco (separado por comas, ej: Actor A, Actor B, ...): ");
+        if (elenco.isEmpty()) {
+            System.out.println("El elenco no puede estar vacío.");
+            continue;
         }
-        
-       // Duracion
-        Double duracion;
-        do {
-            // 1. Llama a leerDouble(), que maneja la validación de formato numérico
-            duracion = leerDouble("Duracion de la pelicula (en minutos, ej: 90.5): "); 
-
-            if (duracion <= 0) { 
-                System.out.println("La duración debe ser un valor positivo (mayor que cero).");
-                continue;
-            }
-            break; 
-        } while (true);
-            
-
-        // Audio (Idiomas)
-        System.out.println("Idiomas de Audio disponibles:");
-        for (Idiomas idioma : Idiomas.values()) {
-            System.out.println("- " + idioma.name());
+        if (!elenco.contains(",")) {
+            System.out.println("Por favor, ingrese múltiples nombres separados por comas (ej: Nombre1, Nombre2).");
+            continue;
         }
-        List<Idiomas> idiomasAudio = new ArrayList<>();
-        while (idiomasAudio.isEmpty()) {
-            String idiomasInput = leerTexto("Idiomas de Audio (separados por coma, ej: ESPANOL, INGLES): ");
-            
-            if (idiomasInput.trim().isEmpty()) {
-                System.out.println("Debe ingresar al menos un idioma.");
-                continue;
-            }
-            
-            idiomasAudio.clear(); 
-            boolean errorEncontrado = false;
-            
-            String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
-            
-            for (String nom : nombresIdiomas) {
-                String nombreLimpio = nom.trim();
-                if (nombreLimpio.isEmpty()) continue;
-                
-                try {
-                    Idiomas idioma = Idiomas.valueOf(nombreLimpio);
-                    if (!idiomasAudio.contains(idioma)) {
-                        idiomasAudio.add(idioma);
-                    }
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
-                    errorEncontrado = true;
-                    break; 
-                }
-            }
-            
-            if (errorEncontrado) {
-                idiomasAudio.clear();
-                continue;
-            }
-            
-            if (idiomasAudio.isEmpty()) {
-                System.out.println("No se pudo procesar ningún idioma válido.");
-                continue;
-            }
-            
-            break; 
+        break;
+    }
+
+    // ---- Director ----
+    String director;
+    while (true) {
+        director = leerTexto("Director: ");
+        if (director.isEmpty()) {
+            System.out.println("El director no puede estar vacío.");
+            continue;
         }
-        String audioString = "";
-         int contador = 0;
-
-         for (Idiomas idi : idiomasAudio) {
-            audioString += idi.name();
-            contador++;
-        
-            // Si no es el último elemento, agrega la coma y el espacio
-            if (contador < idiomasAudio.size()) {
-            audioString += ", ";
+        if (!director.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+            System.out.println("El director solo puede contener letras y espacios.");
+            continue;
         }
+        break;
+    }
 
-         // Subtitulos (Idiomas)
-        System.out.println("Idiomas de Subtitulos disponibles:");
-        for (Idiomas idioma : Idiomas.values()) {
-            System.out.println("- " + idioma.name());
+    // ---- Género (enum) ----
+    System.out.println("Generos disponibles:");
+    for (Generos g : Generos.values()) {
+        System.out.println("- " + g.name());
+    }
+    Generos genero = null;
+    while (genero == null) {
+        String generoInput = leerTexto("Genero (escriba exactamente como aparece arriba): ");
+        if (generoInput.isEmpty()) {
+            System.out.println("Debe seleccionar un genero.");
+            continue;
         }
-        List<Idiomas> idiomasSubtitulos = new ArrayList<>();
-        while (idiomasSubtitulos.isEmpty()) {
-            String idiomasInput = leerTexto("Idiomas de Subtitulos (separados por coma, ej: ESPANOL, INGLES): ");
-            
-            if (idiomasInput.trim().isEmpty()) {
-                System.out.println("Debe ingresar al menos un idioma.");
-                continue;
-            }
-            
-            idiomasSubtitulos.clear(); 
-            boolean errorEncontrado = false;
-            
-            String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
-            
-            for (String nom : nombresIdiomas) {
-                String nombreLimpio = nom.trim();
-                if (nombreLimpio.isEmpty()) continue;
-                
-                try {
-                    Idiomas idioma = Idiomas.valueOf(nombreLimpio);
-                    if (!idiomasSubtitulos.contains(idioma)) {
-                        idiomasSubtitulos.add(idioma);
-                    }
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
-                    errorEncontrado = true;
-                    break; 
-                }
-            }
-            
-            if (errorEncontrado) {
-                idiomasSubtitulos.clear();
-                continue;
-            }
-            
-            if (idiomasSubtitulos.isEmpty()) {
-                System.out.println("No se pudo procesar ningún idioma válido.");
-                continue;
-            }
-            
-            break; 
-        }
-
-        String subtitulosString = "";
-         int cont = 0;
-
-         for (Idiomas idio : idiomasSubtitulos) {
-            subtitulosString += idio.name();
-            cont++;
-        
-            // Si no es el último elemento, agrega la coma y el espacio
-            if (cont < idiomasSubtitulos.size()) {
-            subtitulosString += ", ";
-        }
-           String sinopsis;
-            sinopsis= leerTexto("sinopsis(opcional): ");        
-        // Mostrar resumen y pedir confirmación
-        Pelicula pelicula = new Pelicula(titulo, elenco, director, genero, duracion, audioString, subtitulosString,sinopsis);
-        System.out.println("\nResumen de datos ingresados:");
-        System.out.println("============================");
-        System.out.println("titulo: " + pelicula.getTitulo());
-        System.out.println("elenco: " + pelicula.getElenco());
-        System.out.println("Director: " + pelicula.getDirector());
-        System.out.println("Genero: " + pelicula.getGenero());
-        System.out.println("Duracion: " + pelicula.getDuracion());
-        System.out.println("Idiomas de Audio: " + pelicula.getAudio());
-        System.out.println("Idiomas de Subtitulos: " + pelicula.getSubtitulos());
-        System.out.println("Sinopsis: " + pelicula.getSinopsis());
-        System.out.println("============================");
-
-        
-        String confirma;
-        do {
-            confirma = leerTexto("¿Desea guardar estos datos? (s/n): ").toLowerCase();
-            if (!confirma.equals("s") && !confirma.equals("n")) {
-                System.out.println("Por favor, responda 's' o 'n'");
-                continue;
-            }
-            break;
-        } while (true);
-
-        if (confirma.equals("s")) {
-            pelicula = peliculasDao.guardar(pelicula);
-            System.out.println("Persona guardada con ID: " + pelicula.getId());
-        } else {
-            System.out.println("Operación cancelada.");
+        try {
+            genero = Generos.valueOf(generoInput.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Genero inválido. Por favor, seleccione uno de la lista.");
         }
     }
+
+    // ---- Duración ----
+    double duracion;
+    while (true) {
+        duracion = leerDouble("Duracion de la pelicula (en minutos, ej: 90.5): ");
+        if (duracion <= 0) {
+            System.out.println("La duración debe ser un valor positivo (mayor que cero).");
+            continue;
+        }
+        break;
+    }
+
+    // ---- Idiomas de Audio (enums) ----
+    System.out.println("Idiomas de Audio disponibles:");
+    for (Idiomas idioma : Idiomas.values()) {
+        System.out.println("- " + idioma.name());
+    }
+    List<Idiomas> idiomasAudio = new ArrayList<Idiomas>();
+    while (idiomasAudio.isEmpty()) {
+        String idiomasInput = leerTexto("Idiomas de Audio (separados por coma, ej: ESPANOL, INGLES): ");
+        if (idiomasInput.trim().isEmpty()) {
+            System.out.println("Debe ingresar al menos un idioma.");
+            continue;
+        }
+
+        idiomasAudio.clear();
+        boolean errorEncontrado = false;
+        String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
+
+        for (String nom : nombresIdiomas) {
+            String nombreLimpio = nom.trim();
+            if (nombreLimpio.isEmpty()) continue;
+            try {
+                Idiomas idioma = Idiomas.valueOf(nombreLimpio);
+                if (!idiomasAudio.contains(idioma)) {
+                    idiomasAudio.add(idioma);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
+                errorEncontrado = true;
+                break;
+            }
+        }
+
+        if (errorEncontrado) {
+            idiomasAudio.clear();
+            continue;
+        }
+
+        if (idiomasAudio.isEmpty()) {
+            System.out.println("No se pudo procesar ningún idioma válido.");
+            continue;
+        }
+
+        break;
+    }
+    StringBuilder audioSb = new StringBuilder();
+    for (int i = 0; i < idiomasAudio.size(); i++) {
+        if (i > 0) audioSb.append(", ");
+        audioSb.append(idiomasAudio.get(i).name());
+    }
+    String audioString = audioSb.toString();
+
+    // ---- Idiomas de Subtítulos (enums) ----
+    System.out.println("Idiomas de Subtitulos disponibles:");
+    for (Idiomas idioma : Idiomas.values()) {
+        System.out.println("- " + idioma.name());
+    }
+    List<Idiomas> idiomasSubtitulos = new ArrayList<Idiomas>();
+    while (idiomasSubtitulos.isEmpty()) {
+        String idiomasInput = leerTexto("Idiomas de Subtitulos (separados por coma, ej: ESPANOL, INGLES): ");
+        if (idiomasInput.trim().isEmpty()) {
+            System.out.println("Debe ingresar al menos un idioma.");
+            continue;
+        }
+
+        idiomasSubtitulos.clear();
+        boolean errorEncontrado = false;
+        String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
+
+        for (String nom : nombresIdiomas) {
+            String nombreLimpio = nom.trim();
+            if (nombreLimpio.isEmpty()) continue;
+            try {
+                Idiomas idioma = Idiomas.valueOf(nombreLimpio);
+                if (!idiomasSubtitulos.contains(idioma)) {
+                    idiomasSubtitulos.add(idioma);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
+                errorEncontrado = true;
+                break;
+            }
+        }
+
+        if (errorEncontrado) {
+            idiomasSubtitulos.clear();
+            continue;
+        }
+
+        if (idiomasSubtitulos.isEmpty()) {
+            System.out.println("No se pudo procesar ningún idioma válido.");
+            continue;
+        }
+
+        break;
+    }
+    StringBuilder subSb = new StringBuilder();
+    for (int i = 0; i < idiomasSubtitulos.size(); i++) {
+        if (i > 0) subSb.append(", ");
+        subSb.append(idiomasSubtitulos.get(i).name());
+    }
+    String subtitulosString = subSb.toString();
+
+    // ---- Sinopsis (opcional) ----
+    String sinopsis = leerTexto("Sinopsis (opcional): ");
+
+    // ---- Resumen y confirmación ----
+    Pelicula pelicula = new Pelicula(titulo, elenco, director, genero, duracion, audioString, subtitulosString, sinopsis);
+
+    System.out.println("\nResumen de datos ingresados:");
+    System.out.println("============================");
+    System.out.println("Titulo: " + pelicula.getTitulo());
+    System.out.println("Elenco: " + pelicula.getElenco());
+    System.out.println("Director: " + pelicula.getDirector());
+    System.out.println("Genero: " + pelicula.getGenero());
+    System.out.println("Duracion: " + pelicula.getDuracion());
+    System.out.println("Idiomas de Audio: " + pelicula.getAudio());
+    System.out.println("Idiomas de Subtitulos: " + pelicula.getSubtitulos());
+    System.out.println("Sinopsis: " + pelicula.getSinopsis());
+    System.out.println("============================");
+
+    String confirma;
+    while (true) {
+        confirma = leerTexto("¿Desea guardar estos datos? (s/n): ").toLowerCase();
+        if (!confirma.equals("s") && !confirma.equals("n")) {
+            System.out.println("Por favor, responda 's' o 'n'");
+            continue;
+        }
+        break;
+    }
+
+    if (confirma.equals("s")) {
+        pelicula = peliculasDao.guardar(pelicula);
+        System.out.println("Pelicula guardada con ID: " + pelicula.getId());
+    } else {
+        System.out.println("Operación cancelada.");
+    }
+}
+
     private void listarPorTitulo() throws SQLException {
         System.out.println("\n[Listado de Peliculas ordenados por titulo]");
         listarPeliculas(ComparadorTitulo.POR_TITULO);
@@ -886,9 +868,7 @@ public class Menu {
             System.out.println("Ingrese un número decimal válido.");
         }
     }
-}
-
-}
+}     
 
 
     // ===== SUBMENU RESEÑAS =====
