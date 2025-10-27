@@ -36,7 +36,8 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         );
         return peli;*/
     private Pelicula retornarPelicula(ResultSet rs) throws SQLException {
-        Pelicula peli = new Pelicula( rs.getString("TITULO"),
+        Pelicula peli = new Pelicula(rs.getInt("ID"),
+            rs.getString("TITULO"),
             rs.getString("ELENCO"),
             rs.getString("DIRECTOR"),
             Generos.valueOf(rs.getString("GENERO")),

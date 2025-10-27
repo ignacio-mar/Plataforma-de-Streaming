@@ -38,7 +38,7 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
     public Usuario asociarUsuario(Usuario usuario) throws SQLException {
         // Primero verificamos que exista lakj persona con ese DNI
         Optional<DatosPersonales> datosPersonales = datosPersonalesDAO.buscarPorDni(usuario.getDniPersona());
-        if (datosPersonales.isEmpty()) {
+        if (!datosPersonales.isPresent()) {
             throw new SQLException("No existe una persona con el DNI: " + usuario.getDniPersona());
         }
 
@@ -153,7 +153,7 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
     @Override
     public boolean actualizar(Usuario usuario) throws SQLException {
         // Primero verificamos que exista la persona
-        if (datosPersonalesDAO.buscarPorDni(usuario.getDniPersona()).isEmpty()) {
+        if (!datosPersonalesDAO.buscarPorDni(usuario.getDniPersona()).isPresent()) {
             throw new SQLException("No existe una persona con el DNI: " + usuario.getDniPersona());
         }
 
