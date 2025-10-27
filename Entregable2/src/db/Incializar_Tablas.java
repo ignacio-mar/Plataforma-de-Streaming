@@ -31,11 +31,11 @@ public class Incializar_Tablas {
 
         sql = "CREATE TABLE IF NOT EXISTS USUARIO (" +
                 "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "NOMBRE_USUARIO TEXT NOT NULL," +
-                "EMAIL TEXT NOT NULL," +
+                "NOMBRE_USUARIO TEXT NOT NULL UNIQUE," +
+                "EMAIL TEXT NOT NULL UNIQUE," +
                 "CONTRASENIA TEXT NOT NULL," +
-                "ID_DATOS_PERSONALES INTEGER NOT NULL," +
-                "CONSTRAINT USUARIO_DATOS_PERSONALES_FK FOREIGN KEY (ID_DATOS_PERSONALES) REFERENCES DATOS_PERSONALES(ID)" +
+                "DNI_PERSONA INTEGER NOT NULL," +
+                "CONSTRAINT USUARIO_DATOS_PERSONALES_FK FOREIGN KEY (DNI_PERSONA) REFERENCES DATOS_PERSONALES(DNI)" +
                 ");";
         stmt.executeUpdate(sql);
 

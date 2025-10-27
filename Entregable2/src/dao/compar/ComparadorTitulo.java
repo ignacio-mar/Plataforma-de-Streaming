@@ -1,4 +1,4 @@
-package dao.comparators; 
+package dao.compar; 
 
 import java.util.Comparator;
 import model.Pelicula;
