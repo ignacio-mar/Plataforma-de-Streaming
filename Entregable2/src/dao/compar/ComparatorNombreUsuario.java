@@ -1,14 +1,15 @@
 package dao.compar;
 
-import model.Usuario;
 import java.util.Comparator;
+import model.Usuario;
 
 public class ComparatorNombreUsuario implements Comparator<Usuario> {
-    public static final Comparator<Usuario> POR_NOMBRE_USUARIO =
-            (u1, u2) -> u1.getNombreUsuario().compareToIgnoreCase(u2.getNombreUsuario());
-            
+    public static final ComparatorNombreUsuario POR_NOMBRE_USUARIO = new ComparatorNombreUsuario();
+    
+    private ComparatorNombreUsuario() {} // Constructor privado para Singleton
+    
     @Override
     public int compare(Usuario u1, Usuario u2) {
-        return POR_NOMBRE_USUARIO.compare(u1, u2);
+        return u1.getNombreUsuario().compareToIgnoreCase(u2.getNombreUsuario());
     }
 }

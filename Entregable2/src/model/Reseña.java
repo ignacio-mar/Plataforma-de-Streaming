@@ -13,10 +13,13 @@ public class Reseña{
 
     public Reseña(int calificacion, String comentario, int id_usuario, int id_pelicula) {
         this.calificacion = calificacion;
+        if (calificacion < 1 || calificacion > 5) {
+            throw new IllegalArgumentException("La calificación debe estar entre 1 y 5");
+        }
         this.comentario = comentario;
         this.id_usuario = id_usuario;
         this.id_pelicula = id_pelicula;
-        this.aprobado = true;                    
+        this.aprobado = false;                 
         this.fecha_hora = LocalDateTime.now();    
     }
 
@@ -31,6 +34,9 @@ public class Reseña{
     }
 
     public void setCalificacion(int calificacion) {
+        if (calificacion < 1 || calificacion > 5) {
+            throw new IllegalArgumentException("La calificación debe estar entre 1 y 5");
+        }
         this.calificacion = calificacion;
     }
     public String getComentario() {

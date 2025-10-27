@@ -5,16 +5,25 @@ import dao.PeliculasDAO;
 import dao.ReseñasDAO;
 import dao.UsuariosDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import model.DatosPersonales;
+import model.enums.Generos;
+import model.enums.Idiomas;
 import model.enums.Paises;
 import model.Usuario;
 import model.Pelicula;
 import model.Reseña;
 import dao.compar.ComparatorIdPelicula;
+import dao.compar.ComparadorTitulo;
+import dao.compar.ComparadorGenero;
+import dao.compar.ComparadorDuracion;
+import dao.compar.ComparadorTitulo;
+import dao.compar.ComparadorGenero;
+import dao.compar.ComparadorDuracion;
 
 public class Menu {
 
@@ -59,68 +68,6 @@ public class Menu {
         System.out.println("¡Hasta luego!");
     }
     
-    private void registrarReseña() throws SQLException {
-        System.out.println("\n[Registrar Reseña]");
-        
-        // 1. Validar usuario
-        System.out.println("Por favor, ingrese sus credenciales:");
-        String nombreUsuario = leerTexto("Nombre de usuario: ");
-        String contrasenia = leerTexto("Contraseña: ");
-        
-        Optional<Usuario> optUsuario = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
-        if (optUsuario.isEmpty() || !optUsuario.get().getContrasenia().equals(contrasenia)) {
-            System.out.println("Credenciales inválidas.");
-            return;
-        }
-        Usuario usuario = optUsuario.get();
-        
-        // 2. Mostrar películas disponibles ordenadas por ID
-        System.out.println("\nPelículas disponibles:");
-        List<Pelicula> peliculas = peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
-        if (peliculas.isEmpty()) {
-            System.out.println("No hay películas disponibles.");
-            return;
-        }
-        
-        for (Pelicula p : peliculas) {
-            System.out.printf("%d) %s%n", p.getId(), p.getTitulo());
-        }
-        
-        // 3. Seleccionar película
-        int idPelicula;
-        Optional<Pelicula> optPelicula;
-        do {
-            idPelicula = leerEntero("\nSeleccione el número de la película: ");
-            optPelicula = peliculas.stream()
-                                 .filter(p -> p.getId() == idPelicula)
-                                 .findFirst();
-            if (optPelicula.isEmpty()) {
-                System.out.println("Número de película inválido. Por favor, elija un número de la lista.");
-            } else {
-                break;
-            }
-        } while (true);
-        
-        // 4. Ingresar datos de la reseña
-        int calificacion;
-        do {
-            calificacion = leerEntero("Calificación (1-5): ");
-            if (calificacion < 1 || calificacion > 5) {
-                System.out.println("La calificación debe estar entre 1 y 5.");
-            } else {
-                break;
-            }
-        } while (true);
-        
-        String comentario = leerTexto("Comentario: ");
-        
-        // 5. Crear y guardar la reseña
-        Reseña nuevaReseña = new Reseña(calificacion, comentario, usuario.getId(), idPelicula);
-        reseñasDao.registrar(nuevaReseña);
-        
-        System.out.println("¡Reseña registrada con éxito!");
-    }
-
     // ===== SUBMENU PERSONAS =====
     private void submenuPersonas() {
         boolean volver = false;
@@ -640,6 +587,310 @@ public class Menu {
         }
     }
 
+// ===== SUBMENU PELICULAS =====  
+    private void submenuPeliculas() {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- Peliculas---");
+            System.out.println("1) Alta (guardar)");
+            System.out.println("2) Listar Por Titulo");
+            System.out.println("3) Listar Por Genero");
+            System.out.println("4) listar Por Duracion");
+            System.out.println("0) Volver");
+            int op = leerEntero("Opción: ");
+
+            try {
+                switch (op) {
+                    case 1 -> altaPelicula();
+                    case 2 -> listarPorTitulo();
+                    case 3 -> listarPorGenero();
+                    case 4 -> listarPorDuracion();
+                    case 0 -> volver = true;
+                    default -> System.out.println("Opción inválida.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error SQL: " + e.getMessage());
+            }
+        }
+
+    }
+    // ===== OPERACIONES PELICULAS =====
+
+    private void altaPelicula() throws SQLException {
+        System.out.println("\n[Alta de Pelicula]");
+        
+        // Titulo
+        String titulo;
+        do {
+          titulo = leerTexto("Titulo: ");
+             if (titulo.isEmpty()) {
+                System.out.println("El titulo no puede estar vacío.");
+                continue;
+            }
+            break;
+        } while (true);
+
+        // Elenco
+        String elenco;
+        do {
+            elenco = leerTexto("Elenco (separado por comas, ej: Actor A, Actor B, ...): ");
+            if (elenco.isEmpty()) {
+                System.out.println("El elenco no puede estar vacío.");
+                continue;
+             }
+            if (!elenco.contains(",")) {
+                System.out.println("Por favor, ingrese múltiples nombres separados por comas (ej: Nombre1, Nombre2).");
+                continue;
+            }
+             break;
+            } while (true);
+
+        // Director
+        String director;
+        do {
+            director = leerTexto("DIrector: ");
+            if (director.isEmpty()) {
+                System.out.println("El director no puede estar vacío.");
+                continue;
+            }
+            if (!director.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                System.out.println("El apellido solo puede contener letras y espacios.");
+                continue;
+            }
+            break;
+        } while (true);
+        
+        // Genero
+        System.out.println("Generos disponibles:");
+        for (Generos genero : Generos.values()) {
+            System.out.println("- " + genero.name());
+        }
+        Generos genero = null;
+        while (genero == null) {
+            try {
+                String generoInput = leerTexto("Genero (escriba exactamente como aparece arriba): ");
+                if (generoInput.isEmpty()) {
+                    System.out.println("Debe seleccionar un genero.");
+                    continue;
+                }
+                genero = Generos.valueOf(generoInput.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Genero inválido. Por favor, seleccione uno de la lista.");
+            }
+        }
+        
+       // Duracion
+        Double duracion;
+        do {
+            // 1. Llama a leerDouble(), que maneja la validación de formato numérico
+            duracion = leerDouble("Duracion de la pelicula (en minutos, ej: 90.5): "); 
+
+            if (duracion <= 0) { 
+                System.out.println("La duración debe ser un valor positivo (mayor que cero).");
+                continue;
+            }
+            break; 
+        } while (true);
+            
+
+        // Audio (Idiomas)
+        System.out.println("Idiomas de Audio disponibles:");
+        for (Idiomas idioma : Idiomas.values()) {
+            System.out.println("- " + idioma.name());
+        }
+        List<Idiomas> idiomasAudio = new ArrayList<>();
+        while (idiomasAudio.isEmpty()) {
+            String idiomasInput = leerTexto("Idiomas de Audio (separados por coma, ej: ESPANOL, INGLES): ");
+            
+            if (idiomasInput.trim().isEmpty()) {
+                System.out.println("Debe ingresar al menos un idioma.");
+                continue;
+            }
+            
+            idiomasAudio.clear(); 
+            boolean errorEncontrado = false;
+            
+            String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
+            
+            for (String nom : nombresIdiomas) {
+                String nombreLimpio = nom.trim();
+                if (nombreLimpio.isEmpty()) continue;
+                
+                try {
+                    Idiomas idioma = Idiomas.valueOf(nombreLimpio);
+                    if (!idiomasAudio.contains(idioma)) {
+                        idiomasAudio.add(idioma);
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
+                    errorEncontrado = true;
+                    break; 
+                }
+            }
+            
+            if (errorEncontrado) {
+                idiomasAudio.clear();
+                continue;
+            }
+            
+            if (idiomasAudio.isEmpty()) {
+                System.out.println("No se pudo procesar ningún idioma válido.");
+                continue;
+            }
+            
+            break; 
+        }
+        String audioString = "";
+         int contador = 0;
+
+         for (Idiomas idi : idiomasAudio) {
+            audioString += idi.name();
+            contador++;
+        
+            // Si no es el último elemento, agrega la coma y el espacio
+            if (contador < idiomasAudio.size()) {
+            audioString += ", ";
+        }
+
+         // Subtitulos (Idiomas)
+        System.out.println("Idiomas de Subtitulos disponibles:");
+        for (Idiomas idioma : Idiomas.values()) {
+            System.out.println("- " + idioma.name());
+        }
+        List<Idiomas> idiomasSubtitulos = new ArrayList<>();
+        while (idiomasSubtitulos.isEmpty()) {
+            String idiomasInput = leerTexto("Idiomas de Subtitulos (separados por coma, ej: ESPANOL, INGLES): ");
+            
+            if (idiomasInput.trim().isEmpty()) {
+                System.out.println("Debe ingresar al menos un idioma.");
+                continue;
+            }
+            
+            idiomasSubtitulos.clear(); 
+            boolean errorEncontrado = false;
+            
+            String[] nombresIdiomas = idiomasInput.toUpperCase().split(",");
+            
+            for (String nom : nombresIdiomas) {
+                String nombreLimpio = nom.trim();
+                if (nombreLimpio.isEmpty()) continue;
+                
+                try {
+                    Idiomas idioma = Idiomas.valueOf(nombreLimpio);
+                    if (!idiomasSubtitulos.contains(idioma)) {
+                        idiomasSubtitulos.add(idioma);
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Idioma inválido encontrado: " + nombreLimpio + ". Por favor, corrija la lista.");
+                    errorEncontrado = true;
+                    break; 
+                }
+            }
+            
+            if (errorEncontrado) {
+                idiomasSubtitulos.clear();
+                continue;
+            }
+            
+            if (idiomasSubtitulos.isEmpty()) {
+                System.out.println("No se pudo procesar ningún idioma válido.");
+                continue;
+            }
+            
+            break; 
+        }
+
+        String subtitulosString = "";
+         int cont = 0;
+
+         for (Idiomas idio : idiomasSubtitulos) {
+            subtitulosString += idio.name();
+            cont++;
+        
+            // Si no es el último elemento, agrega la coma y el espacio
+            if (cont < idiomasSubtitulos.size()) {
+            subtitulosString += ", ";
+        }
+           String sinopsis;
+            sinopsis= leerTexto("sinopsis(opcional): ");        
+        // Mostrar resumen y pedir confirmación
+        Pelicula pelicula = new Pelicula(titulo, elenco, director, genero, duracion, audioString, subtitulosString,sinopsis);
+        System.out.println("\nResumen de datos ingresados:");
+        System.out.println("============================");
+        System.out.println("titulo: " + pelicula.getTitulo());
+        System.out.println("elenco: " + pelicula.getElenco());
+        System.out.println("Director: " + pelicula.getDirector());
+        System.out.println("Genero: " + pelicula.getGenero());
+        System.out.println("Duracion: " + pelicula.getDuracion());
+        System.out.println("Idiomas de Audio: " + pelicula.getAudio());
+        System.out.println("Idiomas de Subtitulos: " + pelicula.getSubtitulos());
+        System.out.println("Sinopsis: " + pelicula.getSinopsis());
+        System.out.println("============================");
+
+        
+        String confirma;
+        do {
+            confirma = leerTexto("¿Desea guardar estos datos? (s/n): ").toLowerCase();
+            if (!confirma.equals("s") && !confirma.equals("n")) {
+                System.out.println("Por favor, responda 's' o 'n'");
+                continue;
+            }
+            break;
+        } while (true);
+
+        if (confirma.equals("s")) {
+            pelicula = peliculasDao.guardar(pelicula);
+            System.out.println("Persona guardada con ID: " + pelicula.getId());
+        } else {
+            System.out.println("Operación cancelada.");
+        }
+    }
+    private void listarPorTitulo() throws SQLException {
+        System.out.println("\n[Listado de Peliculas ordenados por titulo]");
+        listarPeliculas(ComparadorTitulo.POR_TITULO);
+    }
+
+    private void listarPorGenero() throws SQLException {
+        System.out.println("\n[Listado de Peliculas ordenados por género]");
+        listarPeliculas(ComparadorGenero.POR_GENERO);
+    }
+    
+    private void listarPorDuracion() throws SQLException {
+        System.out.println("\n[Listado de Peliculas ordenados por duracion]");
+        listarPeliculas(ComparadorDuracion.POR_DURACION);
+    }
+
+    private void listarPeliculas(Comparator<Pelicula> comparador) throws SQLException {
+        List<Pelicula> lista = peliculasDao.listarTodos(comparador);
+        if (lista.isEmpty()) {
+            System.out.println("(sin registros)");
+            return;
+        }
+        for (Pelicula p : lista) {
+            imprimirPelicula(p);
+        }
+    }
+
+    private void imprimirPelicula(Pelicula p) {
+            System.out.printf("Titulo=%s | ELenco: %s | Director: %s | Genero: %s | Duracion: %.2f | Idiomas de Audio: %s | Idiomas de Subtitulos= %s | Sinopsis: %s%n",
+                    p.getTitulo(), p.getElenco(), p.getDirector(), p.getGenero(), p.getDuracion(), p.getAudio(), p.getSubtitulos(), p.getSinopsis());
+        }
+    
+      private double leerDouble(String msg) {
+    while (true) {
+        System.out.print(msg);
+        String s = in.nextLine().trim();
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            System.out.println("Ingrese un número decimal válido.");
+        }
+    }
+}
+
+}
+
+
     // ===== SUBMENU RESEÑAS =====
     private void submenuReseñas() throws SQLException {
         boolean volver = false;
@@ -659,6 +910,69 @@ public class Menu {
         }
     }
 
+   private void registrarReseña() throws SQLException {
+        System.out.println("\n[Registrar Reseña]");
+        
+        // 1. Validar usuario
+        System.out.println("Por favor, ingrese sus credenciales:");
+        String nombreUsuario = leerTexto("Nombre de usuario: ");
+        String contrasenia = leerTexto("Contraseña: ");
+        
+        Optional<Usuario> optUsuario = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
+        if (optUsuario.isEmpty() || !optUsuario.get().getContrasenia().equals(contrasenia)) {
+            System.out.println("Credenciales inválidas.");
+            return;
+        }
+        Usuario usuario = optUsuario.get();
+        
+        // 2. Mostrar películas disponibles ordenadas por ID
+        System.out.println("\nPelículas disponibles:");
+        List<Pelicula> peliculas = peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
+        if (peliculas.isEmpty()) {
+            System.out.println("No hay películas disponibles.");
+            return;
+        }
+        
+        for (Pelicula p : peliculas) {
+            System.out.printf("%d) %s%n", p.getId(), p.getTitulo());
+        }
+        
+        // 3. Seleccionar película
+        int idPelicula;
+        Optional<Pelicula> optPelicula;
+        do {
+            idPelicula = leerEntero("\nSeleccione el número de la película: ");
+            optPelicula = peliculas.stream()
+                                 .filter(p -> p.getId() == idPelicula)
+                                 .findFirst();
+            if (optPelicula.isEmpty()) {
+                System.out.println("Número de película inválido. Por favor, elija un número de la lista.");
+            } else {
+                break;
+            }
+        } while (true);
+        
+        // 4. Ingresar datos de la reseña
+        int calificacion;
+        do {
+            calificacion = leerEntero("Calificación (1-5): ");
+            if (calificacion < 1 || calificacion > 5) {
+                System.out.println("La calificación debe estar entre 1 y 5.");
+            } else {
+                break;
+            }
+        } while (true);
+        
+        String comentario = leerTexto("Comentario: ");
+        
+        // 5. Crear y guardar la reseña
+        Reseña nuevaReseña = new Reseña(calificacion, comentario, usuario.getId(), idPelicula);
+        reseñasDao.registrar(nuevaReseña);
+        
+        System.out.println("¡Reseña registrada con éxito!");
+    }
+
+
     private void aprobarReseña() throws SQLException {
         System.out.println("\n[Aprobar Reseña]");
         
@@ -672,9 +986,7 @@ public class Menu {
             System.out.println("Credenciales inválidas.");
             return;
         }
-        
-        // TODO: Verificar que sea administrador cuando se implemente el rol de usuario
-        
+                
         // Listar reseñas pendientes de aprobación
         System.out.println("\nReseñas pendientes de aprobación:");
         List<Reseña> reseñasPendientes = reseñasDao.listarPendientesAprobacion();
