@@ -1,7 +1,7 @@
  package model;
 
-import model.Enums.Generos;
-import model.Enums.Idiomas;
+import model.enums.Generos;
+import model.enums.Idiomas;
 
 public class Pelicula {
     private int id;

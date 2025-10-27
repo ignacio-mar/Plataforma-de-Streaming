@@ -5,11 +5,9 @@ import java.util.*;
 import dao.PeliculasDAO;
 import db.Conexion;
 import model.Pelicula;
-import model.Usuario;
-import model.Enums.Generos;
-import model.Enums.Idiomas;
+import model.enums.Generos;
+import model.enums.Idiomas;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Comparator;
 
 public class PeliculasDAOjdbc implements PeliculasDAO {

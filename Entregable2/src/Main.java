@@ -1,6 +1,10 @@
 import dao.DatosPersonalesDAO;
-import dao.impl.DatosPersonalesDAOimp;
+import dao.PeliculasDAO;
+import dao.ReseñasDAO;
 import dao.UsuariosDAO;
+import dao.impl.DatosPersonalesDAOimp;
+import dao.impl.PeliculasDAOjdbc;
+import dao.impl.ReseñasDAOjdbc;
 import dao.impl.UsuariosDAOjdbc;
 import db.Conexion;
 import java.util.Scanner;
@@ -13,9 +17,11 @@ public class Main {
             Conexion.getCon();
             DatosPersonalesDAO datosPersonalesDAO = new DatosPersonalesDAOimp();
             UsuariosDAO usuariosDAO = new UsuariosDAOjdbc(Conexion.getCon(), datosPersonalesDAO);
+            PeliculasDAO peliculasDAO = new PeliculasDAOjdbc();
+            ReseñasDAO reseñasDAO = new ReseñasDAOjdbc();
             Scanner sc = new Scanner(System.in);
-            Menu menu = new Menu(sc, datosPersonalesDAO, usuariosDAO);
-            menu.iniciar(); // <<--- este método tiene el while y toda la lógica del menú
+            Menu menu = new Menu(sc, datosPersonalesDAO, usuariosDAO, reseñasDAO, peliculasDAO);
+            menu.iniciar();
 
             sc.close();
 

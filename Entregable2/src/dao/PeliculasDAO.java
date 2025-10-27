@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import model.Pelicula;
-import model.Enums.Generos;
+import model.enums.Generos;
 
 public interface PeliculasDAO {
     Pelicula guardar(Pelicula peli) throws SQLException;     
