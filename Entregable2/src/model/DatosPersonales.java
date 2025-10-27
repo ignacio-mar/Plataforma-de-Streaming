@@ -1,6 +1,6 @@
 package model;
 
-import model.Enums.Paises;
+import model.enums.Paises;
 
 public class DatosPersonales {
     private Integer id;       

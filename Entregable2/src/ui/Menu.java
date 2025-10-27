@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import model.DatosPersonales;
-import model.Enums.Paises;
+import model.enums.Paises;
 
 public class Menu {
 

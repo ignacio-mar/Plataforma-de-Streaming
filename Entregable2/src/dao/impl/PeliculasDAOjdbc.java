@@ -7,8 +7,8 @@ import java.util.Optional;
 import dao.PeliculasDAO;
 import db.Conexion;
 import model.Pelicula;
-import model.Enums.Generos;
-import model.Enums.Idiomas;
+import model.enums.Generos;
+import model.enums.Idiomas;
 
 
 public class PeliculasDAOjdbc implements PeliculasDAO {
@@ -28,6 +28,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         return Conexion.getCon();
     }
 
+    //Implementación del resultset para una instancia Pelicula
     private Pelicula resultSetToPelicula(ResultSet rs) throws SQLException {
         Pelicula peli = new Pelicula(
             rs.getString("TITULO"),
@@ -43,6 +44,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         return peli;
     }
 
+    //Implementación método guardar para subir una película a la base de datos
     @Override
     public Pelicula guardar(Pelicula peli) throws SQLException {
         try (PreparedStatement ps = getconnection().prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -66,6 +68,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         }
     }
 
+    //Implementación método buscar por género
     @Override
     public Optional<Pelicula> buscarPorGenero(Generos genero) throws SQLException {
         try (PreparedStatement ps = getconnection().prepareStatement(SELECT_GENERO_SQL)) {
@@ -80,6 +83,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         }
     }
 
+    //Implementación búsqueda por título de una película
     @Override
     public Optional<Pelicula> buscarPorTitulo(String Titulo) throws SQLException {
         try (PreparedStatement ps = getconnection().prepareStatement(SELECT_TITULO_SQL)) {
@@ -94,6 +98,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         }
     }
 
+    //Implementación búsqueda por duración de una película
     @Override
     public Optional<Pelicula> buscarPorDuracion(double duracion) throws SQLException {
         try (PreparedStatement ps = getconnection().prepareStatement(SELECT_TITULO_SQL)) {
@@ -108,6 +113,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
         }
     }
 
+    //Implementación del listado de todas las películas
     @Override
     public List<Pelicula> listarTodos() throws SQLException {
         List<Pelicula> lista = new ArrayList<>();

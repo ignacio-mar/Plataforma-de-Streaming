@@ -1,9 +1,10 @@
 package model;
 
-import model.Enums.Generos;
-import model.Enums.Idiomas;
+import model.enums.Generos;
+import model.enums.Idiomas;
 
 public class Pelicula {
+    //atributos de la clase Pelicula
     private int id;
     private String titulo;
     private String elenco;
@@ -14,6 +15,7 @@ public class Pelicula {
     private Idiomas subtitulos;
     private String sinopsis;
     
+    //Constructores
     public Pelicula (){}
 
     public Pelicula (String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
@@ -26,6 +28,7 @@ public class Pelicula {
         this.sinopsis = sinopsis;
     }
 
+    //Setters y getters
     public String getTitulo() {
         return titulo;
     }

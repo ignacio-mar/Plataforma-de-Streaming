@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import model.Enums.Paises;
+import model.enums.Paises;
 
 public class DatosPersonalesDAOimp implements DatosPersonalesDAO {
 
