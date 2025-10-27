@@ -27,6 +27,19 @@ public class Pelicula {
         this.subtitulos = subtitulos;
         this.sinopsis = sinopsis;
     }
+public Pelicula(String titulo, String elenco, String director,
+                Generos genero, double duracion,
+                Idiomas audio, Idiomas subtitulos, String sinopsis) {
+    this.titulo = titulo;
+    this.elenco = elenco;
+    this.director = director;
+    this.genero = genero;
+    this.duracion = duracion;
+    this.audio = audio;
+    this.subtitulos = subtitulos;
+    this.sinopsis = sinopsis;
+}
+
 
     public String getTitulo() {
         return titulo;
