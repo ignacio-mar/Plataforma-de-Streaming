@@ -529,7 +529,7 @@ public class Menu {
         Usuario actual = opt.get();
         imprimirUsuario(actual);
 
-        // Pedir nuevos datos (enter para mantener)
+        // Pedir nuevos datos 
         String nombreUsuario = leerTextoOpcional("Nuevo nombre de usuario (enter para mantener): ");
         if (!nombreUsuario.isBlank() && !nombreUsuario.equals(actual.getNombreUsuario())) {
             if (usuariosDao.buscarPorNombreUsuario(nombreUsuario).isPresent()) {
@@ -655,7 +655,7 @@ private void altaPelicula() throws SQLException {
         break;
     }
 
-    // ---- Género (enum) ----
+    // ---- Género  ----
     System.out.println("Géneros disponibles:");
     for (Generos g : Generos.values()) {
         System.out.println("- " + g.name());
@@ -685,7 +685,7 @@ private void altaPelicula() throws SQLException {
         break;
     }
 
-    // ---- Idioma de Audio (enum) ----
+    // ---- Idioma de Audio ----
     System.out.println("Idiomas de Audio disponibles:");
     for (Idiomas idioma : Idiomas.values()) {
         System.out.println("- " + idioma.name());
@@ -700,7 +700,7 @@ private void altaPelicula() throws SQLException {
         }
     }
 
-    // ---- Idioma de Subtítulos (enum) ----
+    // ---- Idioma de Subtítulos ----
     System.out.println("Idiomas de Subtítulos disponibles:");
     for (Idiomas idioma : Idiomas.values()) {
         System.out.println("- " + idioma.name());
@@ -715,7 +715,7 @@ private void altaPelicula() throws SQLException {
         }
     }
 
-    // ---- Sinopsis (opcional) ----
+    // ---- Sinopsis  ----
     String sinopsis = leerTexto("Sinopsis (opcional): ");
 
     // ---- Resumen y confirmación ----
@@ -817,7 +817,7 @@ private void altaPelicula() throws SQLException {
  private void registrarReseña() throws SQLException {
     System.out.println("\n[Registrar Reseña]");
 
-    // 1️⃣ Validar usuario
+    //  Validar usuario
     System.out.println("Por favor, ingrese sus credenciales:");
     String nombreUsuario = leerTexto("Nombre de usuario: ");
     String contrasenia = leerTexto("Contraseña: ");
@@ -829,7 +829,7 @@ private void altaPelicula() throws SQLException {
     }
     Usuario usuario = optUsuario.get();
 
-    // 2️⃣ Mostrar películas disponibles ordenadas por ID
+    //  Mostrar películas disponibles ordenadas por ID
     System.out.println("\nPelículas disponibles:");
     List<Pelicula> peliculas = peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
     if (peliculas.isEmpty()) {
@@ -841,7 +841,7 @@ private void altaPelicula() throws SQLException {
         System.out.printf("%d) %s%n", p.getId(), p.getTitulo());
     }
 
-    // 3️⃣ Seleccionar película (sin usar lambdas)
+    //  Seleccionar película (sin usar lambdas)
     int idPelicula;
     Optional<Pelicula> optPelicula;
     do {
@@ -862,7 +862,7 @@ private void altaPelicula() throws SQLException {
         }
     } while (true);
 
-    // 4️⃣ Ingresar datos de la reseña
+    //  Ingresar datos de la reseña
     int calificacion;
     while (true) {
         calificacion = leerEntero("Calificación (1-5): ");
@@ -884,8 +884,7 @@ private void altaPelicula() throws SQLException {
     private void aprobarReseña() throws SQLException {
         System.out.println("\n[Aprobar Reseña]");
         
-        // Primero verificar que sea un usuario administrador
-        System.out.println("Por favor, ingrese sus credenciales de administrador:");
+        System.out.println("Por favor, ingrese sus credenciales:");
         String nombreUsuario = leerTexto("Nombre de usuario: ");
         String contrasenia = leerTexto("Contraseña: ");
         
@@ -895,7 +894,6 @@ private void altaPelicula() throws SQLException {
             return;
         }
                 
-        // Listar reseñas pendientes de aprobación
         System.out.println("\nReseñas pendientes de aprobación:");
         List<Reseña> reseñasPendientes = reseñasDao.listarPendientesAprobacion();
         
@@ -909,7 +907,6 @@ private void altaPelicula() throws SQLException {
                     r.getId(), r.getId_pelicula(), r.getId_usuario(), r.getCalificacion(), r.getComentario());
         }
         
-        // Seleccionar reseña a aprobar
         int idReseña = leerEntero("\nIngrese el ID de la reseña a aprobar (0 para cancelar): ");
         if (idReseña == 0) {
             System.out.println("Operación cancelada.");

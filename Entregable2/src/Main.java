@@ -1,7 +1,12 @@
-import dao.DatosPersonalesDAO;
-import dao.PeliculasDAO;
-import dao.ReseñasDAO;
-import dao.UsuariosDAO;
+
+
+/* 
+ * 
+ 
+ import dao.DatosPersonalesDAO;
+ import dao.PeliculasDAO;
+ import dao.ReseñasDAO;
+ import dao.UsuariosDAO;
 import dao.impl.DatosPersonalesDAOimp;
 import dao.impl.PeliculasDAOjdbc;
 import dao.impl.ReseñasDAOjdbc;
@@ -30,3 +35,37 @@ public class Main {
         }
     }
 }
+*/
+
+import dao.DatosPersonalesDAO;
+import dao.FactoryDAO;
+import dao.PeliculasDAO;
+import dao.ReseñasDAO;
+import dao.UsuariosDAO;
+import db.Conexion;
+import java.util.Scanner;
+import ui.Menu;
+
+public class Main {
+
+
+    public static void main(String[] args) {
+        try {
+            DatosPersonalesDAO datosPersonalesDAO = FactoryDAO.getDatosPersonalesDAO();
+            UsuariosDAO usuariosDAO = FactoryDAO.getUsuariosDAO(Conexion.getCon(), datosPersonalesDAO);
+            PeliculasDAO peliculasDAO = FactoryDAO.getPeliculasDAO();
+            ReseñasDAO reseñasDAO = FactoryDAO.getReseñasDAO();
+            Scanner sc = new Scanner(System.in);
+            Menu menu = new Menu(sc, datosPersonalesDAO, usuariosDAO, reseñasDAO, peliculasDAO);
+            menu.iniciar();
+
+            sc.close();
+
+        } catch (Exception e) {
+            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+        }
+    }
+}
+
+
+ 
