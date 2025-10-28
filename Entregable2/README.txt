@@ -49,3 +49,10 @@ Se implementaron las siguientes funcionalidades requeridas para la Prueba de Con
 - **Listado de Usuarios**: Permite ordenar por **Nombre de Usuario** o **Email**, usando clases que implementan `Comparator`.
 - [cite_start]**Listado de Películas**: Permite ordenar por **Título**, **Género** o **Duración**, usando la interfaz `Comparator`[cite: 2375, 2376].
 - [cite_start]**Gestión de Reseña**: Se implementan las funcionalidades de **Registrar Reseña** y **Aprobar Reseña**[cite: 2377, 2384].
+
+
+## Extras
+
+Se dejaron cargadas algunas peliculas y un usuario para probar el sistema
+user:LeoMessi10
+password:123123
