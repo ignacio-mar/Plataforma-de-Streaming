@@ -1,27 +1,21 @@
-# TDL II - Plataforma de Streaming - Entregable 2
----
+## Getting Started
 
-## Integrantes - Grupo 32
+Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
-*Bordalecu Campodónico, Federico* federicobc04@gmail.com; *Cappella, Ezequiel Osvaldo* ezequielcappella03@gmail.com; *Martínez Ignacio* ignaciorubenm12@gmail.com
+## Folder Structure
 
----
+The workspace contains two folders by default, where:
 
-## Contenido
-El contenido de este proyecto está dividido en distintas carpetas separando las partes funcionales del sistema.
-- Entregable2/.vscode -> Contiene la **configuración específica** de Visual Studio Code para el entorno de desarrollo del grupo.
-- Entregable2/bin -> Contiene los archivos .class generados al compilar el proyecto.
-- Entregable2/consgina -> Contiene el archivo PDF con la consigna y las pautas a seguir para el desarrollo de la plataforma.
-- Entregable2/db -> Contiene el archivo de la base de datos. Es posible visualizarla con un browser.
-- Entregable2/lib -> Contiene las librerías externas que necesita el proyecto para ejecutarse (El driver JDBC de tipo 4 necesario para conectarse a la base de datos SQLite).
-- Entregable2/src -> **Código fuente** de la aplicación. Contiene los paquetes principales de la aplicación.
+- `src`: the folder to maintain sources
+- `lib`: the folder to maintain dependencies
 
----
+Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
-## Flujo de ejecución
+> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
-[cite_start]La arquitectura sigue el patrón **Data Access Object (DAO)** y usa la capa JDBC para acceder a la base de datos.[cite: 2414].
+## Dependency Management
 
+<<<<<<< HEAD
 ## De la implementación
 
 - [cite_start]**Patrones**: Se implementó el patrón _DAO_ para abstraer la lógica del acceso a los datos [cite: 2414, 2397]. [cite_start]El manejo de la conexión se maneja a través del uso del patrón **Singleton**[cite: 2576].
@@ -57,3 +51,6 @@ Se implementaron las siguientes funcionalidades requeridas para la Prueba de Con
 Se dejaron cargadas algunas peliculas y un usuario para probar el sistema
 - user:LeoMessi10
 - password:123123
+=======
+The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+>>>>>>> parent of 4029695 (...)
