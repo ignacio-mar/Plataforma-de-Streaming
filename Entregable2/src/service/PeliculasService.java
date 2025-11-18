@@ -5,10 +5,7 @@ import dao.compar.ComparadorDuracion;
 import dao.compar.ComparadorGenero;
 import dao.compar.ComparadorTitulo;
 import model.Pelicula;
-import model.enums.Generos;
-import model.enums.Idiomas;
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 
 public class PeliculasService {
@@ -35,26 +32,30 @@ public class PeliculasService {
         return duracion > 0;
     }
 
-    public Pelicula crearPelicula(String titulo, String elenco, String director, Generos genero, 
-                                  double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis) 
-            throws SQLException {
+    public Pelicula crearPelicula(String titulo, String elenco, String director, model.enums.Generos genero, double duracion,  model.enums.Idiomas audio, model.enums.Idiomas subtitulos, String sinopsis) throws SQLException {
         Pelicula pelicula = new Pelicula(titulo, elenco, director, genero, duracion, audio, subtitulos, sinopsis);
         return peliculasDao.guardar(pelicula);
     }
 
     public List<Pelicula> listarPorTitulo() throws SQLException {
-        return peliculasDao.listarTodos(ComparadorTitulo.POR_TITULO);
+        List<Pelicula> lista = peliculasDao.listarTodos();
+        lista.sort(ComparadorTitulo.POR_TITULO);
+        return lista;
     }
 
     public List<Pelicula> listarPorGenero() throws SQLException {
-        return peliculasDao.listarTodos(ComparadorGenero.POR_GENERO);
+        List<Pelicula> lista = peliculasDao.listarTodos();
+        lista.sort(ComparadorGenero.POR_GENERO);
+        return lista;
     }
 
     public List<Pelicula> listarPorDuracion() throws SQLException {
-        return peliculasDao.listarTodos(ComparadorDuracion.POR_DURACION);
+        List<Pelicula> lista = peliculasDao.listarTodos();
+        lista.sort(ComparadorDuracion.POR_DURACION);
+        return lista;
     }
 
-    public List<Pelicula> listarTodos(Comparator<Pelicula> comparador) throws SQLException {
-        return peliculasDao.listarTodos(comparador);
+    public List<Pelicula> listarTodos() throws SQLException {
+        return peliculasDao.listarTodos();
     }
 }

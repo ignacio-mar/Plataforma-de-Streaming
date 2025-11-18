@@ -4,7 +4,6 @@ import dao.DatosPersonalesDAO;
 import dao.UsuariosDAO;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import model.DatosPersonales;
@@ -124,11 +123,8 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
     }
 
     @Override
-    public List<Usuario> listarTodos(Comparator<Usuario> comparador) throws SQLException {
-        if (comparador == null) {
-            throw new IllegalArgumentException("El comparador es obligatorio. Usar ComparatorNombreUsuario.POR_NOMBRE_USUARIO o ComparatorEmailUsuario.POR_EMAIL");
-        }
-        
+    public List<Usuario> listarTodos() throws SQLException {
+
         List<Usuario> usuarios = new ArrayList<>();
         try (Statement stmt = conexion.createStatement();
              ResultSet rs = stmt.executeQuery(SELECT_ALL_SQL)) {
@@ -144,9 +140,6 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
                 usuarios.add(usuario);
             }
         }
-
-        // Ordenamos la lista según el comparador proporcionado
-        usuarios.sort(comparador);
         return usuarios;
     }
 

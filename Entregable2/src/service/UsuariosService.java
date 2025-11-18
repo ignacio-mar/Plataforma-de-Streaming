@@ -1,13 +1,15 @@
 package service;
 
-import dao.DatosPersonalesDAO;
-import dao.UsuariosDAO;
-import model.DatosPersonales;
-import model.Usuario;
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import dao.DatosPersonalesDAO;
+import dao.UsuariosDAO;
+import dao.compar.ComparatorEmailUsuario;
+import dao.compar.ComparatorNombreUsuario;
+import model.DatosPersonales;
+import model.Usuario;
 
 public class UsuariosService {
 
@@ -50,15 +52,19 @@ public class UsuariosService {
     }
 
     public List<Usuario> listarTodosPorNombre() throws SQLException {
-        return usuariosDao.listarTodos((u1, u2) -> u1.getNombreUsuario().compareToIgnoreCase(u2.getNombreUsuario()));
+        List<Usuario> lista = usuariosDao.listarTodos();
+        lista.sort(ComparatorNombreUsuario.POR_NOMBRE_USUARIO);
+        return lista;
     }
 
     public List<Usuario> listarTodosPorEmail() throws SQLException {
-        return usuariosDao.listarTodos((u1, u2) -> u1.getEmail().compareToIgnoreCase(u2.getEmail()));
+        List<Usuario> lista = usuariosDao.listarTodos();
+        lista.sort(ComparatorEmailUsuario.POR_EMAIL);
+        return lista;
     }
 
-    public List<Usuario> listarTodos(Comparator<Usuario> comparador) throws SQLException {
-        return usuariosDao.listarTodos(comparador);
+    public List<Usuario> listarTodos() throws SQLException {
+        return usuariosDao.listarTodos();
     }
 
     public boolean actualizarUsuario(int id, String nombreUsuario, String email, String contrasenia, int dniPersona) 
