@@ -32,5 +32,5 @@ Se implementaron las siguientes funcionalidades requeridas para la Prueba de Con
 ## Extras
 
 Se dejaron cargadas algunas peliculas y un usuario para probar el sistema
-- user:LeoMessi10
+- user:Lionel
 - password:123123
