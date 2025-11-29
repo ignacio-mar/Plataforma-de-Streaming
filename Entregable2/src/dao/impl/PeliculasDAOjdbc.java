@@ -75,10 +75,7 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
 
 
     @Override
-    public List<Pelicula> listarTodos(Comparator<Pelicula> comparador) throws SQLException {
-        if (comparador == null) {
-            throw new IllegalArgumentException("El comparador es obligatorio. Usar ComparadorTitulo.POR_TITULO, ComparadorDuracion.POR_DURACION, etc.");
-        }
+    public List<Pelicula> listarTodos() throws SQLException {
         
         List<Pelicula> peliculas = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
@@ -89,8 +86,8 @@ public class PeliculasDAOjdbc implements PeliculasDAO {
             }
              }
     
-        // Ordenamos la lista según el comparador proporcionado
-        peliculas.sort(comparador);
+        
+    
         return peliculas;
     }
 

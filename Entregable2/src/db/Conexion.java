@@ -1,6 +1,7 @@
 package db;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Conexion {
 private static Connection con = null;
@@ -17,6 +18,18 @@ public static Connection getCon() {
 return con;
 }
 private Conexion() {
+}
+public static void close() {
+
+    if (con != null) {
+        try {
+            con.close();
+            System.out.println("Conexión a la base de datos cerrada correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar la conexión: " + e.getMessage());
+
+    }
+}
 }
 }
 

@@ -30,10 +30,10 @@ public class Main {
             ReseñasService reseñasService = new ReseñasService(reseñasDAO, usuariosDAO, peliculasDAO);
             
             // Crear menú y ejecutar
-    
+            sc = new Scanner(System.in);
             Menu menu = new Menu(sc, personasService, usuariosService, peliculasService, reseñasService);
             menu.iniciar();
-            sc = new Scanner(System.in);
+        
 
 
 

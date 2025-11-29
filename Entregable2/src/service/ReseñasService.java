@@ -3,7 +3,7 @@ package service;
 import dao.PeliculasDAO;
 import dao.ReseñasDAO;
 import dao.UsuariosDAO;
-import dao.compar.ComparatorIdPelicula;
+
 import model.Pelicula;
 import model.Reseña;
 import model.Usuario;
@@ -32,7 +32,7 @@ public class ReseñasService {
     }
 
     public List<Pelicula> listarPeliculasDisponibles() throws SQLException {
-        return peliculasDao.listarTodos(ComparatorIdPelicula.POR_ID);
+        return peliculasDao.listarTodos();
     }
 
     public boolean validarCalificacion(int calificacion) {
