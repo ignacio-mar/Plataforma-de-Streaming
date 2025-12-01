@@ -1,8 +1,8 @@
 package view;
 import java.awt.*;
 import javax.swing.*;
-
 import view.clasesInternas.PanelConImagen;
+
 
 public class LoginView extends JFrame {
     private JLabel etiquetaNombreUsuario;
@@ -25,7 +25,7 @@ public LoginView() {
     
     // PARTE IZQUIERDA: TRABAJAMOS CON LA IMAGEN 
     PanelConImagen panelIzquierdo = new PanelConImagen("/"+url_name);
-     add(panelIzquierdo);// Agregamos el panel izquierdo al JFrame
+    add(panelIzquierdo);// Agregamos el panel izquierdo al JFrame
 
     // PARTE DERECHA: FORMULARIO DE LOGIN
     JPanel panelDerecho= new JPanel();
@@ -53,3 +53,6 @@ public LoginView() {
 
 }
 }
+
+
+
