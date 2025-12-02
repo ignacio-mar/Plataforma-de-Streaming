@@ -13,9 +13,25 @@ public class Pelicula {
     private Idiomas audio;
     private Idiomas subtitulos;
     private String sinopsis;
+    private int anio;
     
     public Pelicula (){}
 
+    public Pelicula (String titulo, int anio, String director, String elenco, String sinopsis, double duracion){
+        this.titulo = titulo;
+        this.anio = anio; 
+        this.director = director;
+        this.elenco = elenco;
+        this.sinopsis = sinopsis;
+        this.duracion = duracion;
+        
+        // Valores por defecto o null (OMDb no los da)
+        this.id = 0; 
+        this.genero = null; 
+        this.audio = null;
+        this.subtitulos = null;
+    }
+    
     public Pelicula (int id,String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
         this.id=id;
         this.titulo = titulo;
@@ -111,6 +127,14 @@ public Pelicula(String titulo, String elenco, String director,
 
     public void setSinopsis(String sinopsis) {
         this.sinopsis = sinopsis;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
     }
 
 }
