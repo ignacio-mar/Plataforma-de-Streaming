@@ -1,4 +1,4 @@
- package model;
+package model;
 
 import model.enums.Generos;
 import model.enums.Idiomas;
@@ -13,11 +13,17 @@ public class Pelicula {
     private Idiomas audio;
     private Idiomas subtitulos;
     private String sinopsis;
-    
-    public Pelicula (){}
 
-    public Pelicula (int id,String titulo, String elenco, String director, Generos genero, double duracion, Idiomas audio, Idiomas subtitulos, String sinopsis)  {
-        this.id=id;
+    private double ratingPromedio;   
+    private int anio;                
+    private String posterUrl;        
+
+    public Pelicula() {}
+ 
+    public Pelicula(int id, String titulo, String elenco, String director,
+                    Generos genero, double duracion,
+                    Idiomas audio, Idiomas subtitulos, String sinopsis)  {
+        this.id = id;
         this.titulo = titulo;
         this.elenco = elenco;
         this.director = director;
@@ -27,19 +33,39 @@ public class Pelicula {
         this.subtitulos = subtitulos;
         this.sinopsis = sinopsis;
     }
-public Pelicula(String titulo, String elenco, String director,
-                Generos genero, double duracion,
-                Idiomas audio, Idiomas subtitulos, String sinopsis) {
-    this.titulo = titulo;
-    this.elenco = elenco;
-    this.director = director;
-    this.genero = genero;
-    this.duracion = duracion;
-    this.audio = audio;
-    this.subtitulos = subtitulos;
-    this.sinopsis = sinopsis;
-}
 
+
+    public Pelicula(String titulo, String elenco, String director,
+                    Generos genero, double duracion,
+                    Idiomas audio, Idiomas subtitulos, String sinopsis) {
+        this.titulo = titulo;
+        this.elenco = elenco;
+        this.director = director;
+        this.genero = genero;
+        this.duracion = duracion;
+        this.audio = audio;
+        this.subtitulos = subtitulos;
+        this.sinopsis = sinopsis;
+    }
+
+    public Pelicula(String titulo, String elenco, String director,
+                    Generos genero, double duracion,
+                    Idiomas audio, Idiomas subtitulos, String sinopsis,
+                    double ratingPromedio, int anio, String posterUrl) {
+        this.titulo = titulo;
+        this.elenco = elenco;
+        this.director = director;
+        this.genero = genero;
+        this.duracion = duracion;
+        this.audio = audio;
+        this.subtitulos = subtitulos;
+        this.sinopsis = sinopsis;
+        this.ratingPromedio = ratingPromedio;
+        this.anio = anio;
+        this.posterUrl = posterUrl;
+    }
+
+    // Getters / setters
 
     public String getTitulo() {
         return titulo;
@@ -56,7 +82,7 @@ public Pelicula(String titulo, String elenco, String director,
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getElenco() {
         return elenco;
     }
@@ -113,4 +139,29 @@ public Pelicula(String titulo, String elenco, String director,
         this.sinopsis = sinopsis;
     }
 
+
+
+    public double getRatingPromedio() {
+        return ratingPromedio;
+    }
+
+    public void setRatingPromedio(double ratingPromedio) {
+        this.ratingPromedio = ratingPromedio;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
 }
