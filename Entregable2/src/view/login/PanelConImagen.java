@@ -1,4 +1,4 @@
-package view.clasesInternas;
+package view.login;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class PanelConImagen extends JPanel {
         private void dibujar(Graphics g) {
             if (imagen != null) {
                 // Dibuja la imagen, estirándola al tamaño actual del panel.
-                g.drawImage(imagen,20, 70, 580, 400, this);
+                g.drawImage(imagen,10, 45, 580, 470, this);
             } else {
                 // Si la imagen no cargó, pintamos un fondo negro
                 g.setColor(Color.BLACK);
