@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class OmdbService {
-    private static final String API_KEY = ""; // NO SE CUAL ES LA API KEY
+    private static final String API_KEY = "d751dcc3"; // API KEY OBTENIDA EN https://www.omdbapi.com/apikey.aspx
     private static final String BASE_URL = "http://www.omdbapi.com/?apikey=" + API_KEY + "&t=";
 
     public Pelicula buscarPelicula(String titulo)
