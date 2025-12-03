@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 import model.Pelicula;
 import model.enums.Generos;
 import model.enums.Idiomas;
@@ -18,8 +19,6 @@ import model.enums.Idiomas;
 public class PeliculasService {
 
     private final PeliculasDAO peliculasDao;
-
-    // top 10
     private final List<Pelicula> cachePeliculas = new ArrayList<>();
 
     public PeliculasService(PeliculasDAO peliculasDao) {
@@ -27,26 +26,43 @@ public class PeliculasService {
     }
 
     public boolean validarTitulo(String titulo) {
-        return !titulo.isEmpty();
+        return titulo != null && !titulo.isEmpty();
     }
 
     public boolean validarElenco(String elenco) {
-        return !elenco.isEmpty() && elenco.contains(",");
+        return elenco != null && !elenco.isEmpty() && elenco.contains(",");
     }
 
     public boolean validarDirector(String director) {
-        return !director.isEmpty() && director.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
+        return director != null &&
+               !director.isEmpty() &&
+               director.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
     }
 
     public boolean validarDuracion(double duracion) {
         return duracion > 0;
     }
 
-    public Pelicula crearPelicula(String titulo, String elenco, String director,
-                                  Generos genero, double duracion,
-                                  Idiomas audio, Idiomas subtitulos,
+    public Pelicula crearPelicula(String titulo,
+                                  String elenco,
+                                  String director,
+                                  Generos genero,
+                                  double duracion,
+                                  Idiomas audio,
+                                  Idiomas subtitulos,
                                   String sinopsis) throws SQLException {
-        Pelicula pelicula = new Pelicula(titulo, elenco, director, genero, duracion, audio, subtitulos, sinopsis);
+
+        Pelicula pelicula = new Pelicula(
+                titulo,
+                elenco,
+                director,
+                genero,
+                duracion,
+                audio,
+                subtitulos,
+                sinopsis
+        );
+
         return peliculasDao.guardar(pelicula);
     }
 
@@ -72,31 +88,45 @@ public class PeliculasService {
         return peliculasDao.listarTodos();
     }
 
-    // guardar todo el CSV en BD 
     public void importarDesdeCsv(String rutaCsv) throws IOException, SQLException {
+        importarDesdeCsv(rutaCsv, null);
+    }
+
+    public void importarDesdeCsv(String rutaCsv, Consumer<Integer> onProgress) throws IOException, SQLException {
         cachePeliculas.clear();
+
+        int total = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaCsv))) {
+            while (br.readLine() != null) {
+                total++;
+            }
+        }
+        if (total > 0) {
+            total--;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(rutaCsv))) {
             String linea;
             boolean esPrimera = true;
+            int count = 0;
 
             while ((linea = br.readLine()) != null) {
                 if (esPrimera) {
                     esPrimera = false;
                     continue;
-                }// saltar header
+                }
 
                 List<String> campos = parseLineCsv(linea);
                 if (campos.size() < 9) {
                     continue;
-                } // ignorar líneas mal formateadas
+                }
 
                 String releaseDate      = campos.get(0);
                 String title            = campos.get(1);
                 String overview         = campos.get(2);
-                String voteAverageStr   = campos.get(5); 
+                String voteAverageStr   = campos.get(5);
                 String originalLangCode = campos.get(6);
-                String genreRaw         = campos.get(7); 
+                String genreRaw         = campos.get(7);
                 String posterUrl        = campos.get(8);
 
                 int anio = extraerAnio(releaseDate);
@@ -105,12 +135,11 @@ public class PeliculasService {
                 Generos genero = mapearGeneroDesdeCsv(genreRaw);
                 Idiomas idiomaOriginal = mapearIdiomaDesdeCodigo(originalLangCode);
 
-                // PLACEHOLDERS 
                 String elenco = "Elenco no disponible";
                 String director = "Director no disponible";
                 double duracion = 0.0;
-                Idiomas audio = idiomaOriginal;           
-                Idiomas subtitulos = Idiomas.CASTELLANO;  
+                Idiomas audio = idiomaOriginal;
+                Idiomas subtitulos = Idiomas.CASTELLANO;
 
                 Pelicula pelicula = new Pelicula(
                         title,
@@ -120,35 +149,60 @@ public class PeliculasService {
                         duracion,
                         audio,
                         subtitulos,
-                        overview
+                        overview,
+                        ratingPromedio,
+                        anio,
+                        posterUrl
                 );
 
-                // nuevos
-                pelicula.setRatingPromedio(ratingPromedio);
-                pelicula.setAnio(anio);
-                pelicula.setPosterUrl(posterUrl);
-
                 peliculasDao.guardar(pelicula);
-
-                // Guardar para top 10
                 cachePeliculas.add(pelicula);
+
+                count++;
+                if (onProgress != null && total > 0) {
+                    int porc = (count * 100) / total;
+                    onProgress.accept(Math.min(porc, 100));
+                }
             }
         }
 
         ordenarCachePorRatingDesc();
     }
 
+    public void importarDesdeCsvAsync(String rutaCsv,
+                                      Runnable onSuccess,
+                                      Consumer<Exception> onError) {
+        importarDesdeCsvAsync(rutaCsv, onSuccess, onError, null);
+    }
+
+    public void importarDesdeCsvAsync(String rutaCsv,
+                                      Runnable onSuccess,
+                                      Consumer<Exception> onError,
+                                      Consumer<Integer> onProgress) {
+        new Thread(() -> {
+            try {
+                importarDesdeCsv(rutaCsv, onProgress);
+                if (onSuccess != null) {
+                    onSuccess.run();
+                }
+            } catch (Exception e) {
+                if (onError != null) {
+                    onError.accept(e);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     public List<Pelicula> obtenerTop10PorRating() throws SQLException {
         if (cachePeliculas.isEmpty()) {
             cachePeliculas.addAll(peliculasDao.listarTodos());
             ordenarCachePorRatingDesc();
         }
-
         int n = Math.min(10, cachePeliculas.size());
         return new ArrayList<>(cachePeliculas.subList(0, n));
     }
-
 
     private List<String> parseLineCsv(String line) {
         List<String> campos = new ArrayList<>();
@@ -171,7 +225,8 @@ public class PeliculasService {
                 actual.append(c);
             }
         }
-        campos.add(actual.toString()); // último campo
+
+        campos.add(actual.toString());
         return campos;
     }
 
@@ -199,7 +254,7 @@ public class PeliculasService {
             return Generos.FICCION;
         }
 
-        String primerGenero = genreRaw.split(",")[0].trim(); // primer género
+        String primerGenero = genreRaw.split(",")[0].trim();
 
         switch (primerGenero) {
             case "Action":
@@ -208,17 +263,13 @@ public class PeliculasService {
             case "Western":
             case "Crime":
                 return Generos.ACCION;
-
             case "Comedy":
                 return Generos.COMEDIA;
-
             case "Horror":
             case "Thriller":
                 return Generos.TERROR;
-
             case "Romance":
                 return Generos.ROMANTICA;
-
             case "Science Fiction":
             case "Fantasy":
             case "Animation":

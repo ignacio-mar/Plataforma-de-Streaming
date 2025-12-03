@@ -1,3 +1,5 @@
+
+/*
 import javax.swing.SwingUtilities;
 import view.login.LoginView;
 
@@ -9,6 +11,9 @@ public class Main {
         
         LoginView pantallaLogin = new LoginView();
         pantallaLogin.setVisible(true);
-
-        });
+        
+    });
 }}
+
+
+*/
