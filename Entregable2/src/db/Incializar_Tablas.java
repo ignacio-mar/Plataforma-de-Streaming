@@ -39,7 +39,10 @@ sql = "CREATE TABLE IF NOT EXISTS PELICULA (" +
       "DURACION REAL NOT NULL," +         
       "AUDIO TEXT(100) NOT NULL," +       
       "SUBTITULOS TEXT(100) NOT NULL," +  
-      "SINOPSIS TEXT(500)" +             
+      "SINOPSIS TEXT(500)," +             
+      "RATING_PROMEDIO REAL," +           
+      "ANIO INTEGER," +                   
+      "POSTER TEXT" +                     
       ");";
 stmt.executeUpdate(sql);
 
