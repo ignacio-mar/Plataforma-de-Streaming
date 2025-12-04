@@ -2,7 +2,7 @@ package model.exceptions;
 
 public class BusquedaInvalidaException extends RuntimeException {
 
-    private final String textoIngresado
+    private final String textoIngresado;
 
     public BusquedaInvalidaException(String input){
         super("El término de búsqueda es inválido o demasiado corto: " + input);
@@ -14,8 +14,8 @@ public class BusquedaInvalidaException extends RuntimeException {
     }
 
     @Override
-    public getMessage(); {
-        return super.getmessage() + "[Valor ingresado: '" + textoIngresado + "']";
+    public String getMessage() {
+        return super.getMessage() + "[Valor ingresado: '" + textoIngresado + "']";
     }
     
 }

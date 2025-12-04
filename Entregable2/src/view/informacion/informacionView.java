@@ -1,10 +1,10 @@
 package view.informacion;
 
-import modelo.Pelicula;
+import model.Pelicula;
 import javax.swing.*;
 import java.awt.*;
 
-public class informacionView  extends JFrame {
+public class InformacionVista  extends JFrame {
 
     private final JTextField txtTitulo;
     private final JButton btnBuscar;
@@ -41,7 +41,7 @@ public class informacionView  extends JFrame {
 
         JPanel panelCentral = new JPanel();
         panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
-        panelCentral.setBorder(BoderFactory.createEmptyBorder(10, 20, 10, 20));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         panelCentral.add(lblTituloAnio);
         panelCentral.add(lblDirector);
@@ -58,11 +58,11 @@ public class informacionView  extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public JButton getBuscarButton() {
+    public JButton getBotonBuscar() {
         return btnBuscar;
     }
 
-    public JTextField getTituloTextField() {
+    public JTextField getCampoTitulo() {
         return txtTitulo;
     }
 
@@ -73,7 +73,7 @@ public class informacionView  extends JFrame {
 
         lblGenero.setText("Género: " + pelicula.getGenero());
         areaSinopsis.setText(pelicula.getSinopsis() + "\n\nElenco: " + pelicula.getElenco());
-        areaSinopsis.setCarePosition(0);
+        areaSinopsis.setCaretPosition(0);
     }
 
     public void mostrarError(String msj) {
@@ -81,12 +81,12 @@ public class informacionView  extends JFrame {
         limpiarResultados();
     }
 
-    public void setEStadoBusqueda(String estado) {
+    public void setEstadoBusqueda(String estado) {
         lblEstadoBusqueda.setText("Estado: " + estado);
     }
 
     private void limpiarResultados() {
-        lblTituloAnio.setTExt("Título y año: -");
+        lblTituloAnio.setText("Título y año: -");
         lblDirector.setText("Director: -");
         lblDuracion.setText("Duración: -");
         lblGenero.setText("Género: -");

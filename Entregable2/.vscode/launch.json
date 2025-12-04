@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Java Main",
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "Main_Factory.Main",
+            "projectName": "Entregable2",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

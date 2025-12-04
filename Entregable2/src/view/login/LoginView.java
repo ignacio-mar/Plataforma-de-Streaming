@@ -30,7 +30,7 @@ public LoginView() {
 
     // ----------PARTE DERECHA-----------
     
-    //declaro fuentes que vamos a usar
+    // declaro fuentes que vamos a usar
     Font fuenteNegrita = new Font("Arial", Font.BOLD, 14);
     //---------
 
@@ -127,7 +127,6 @@ public JButton getBotonRegistrar() {
     return botonRegistrar;
 }
 public void mostrarMensajeError() {
-    //este método es una forma limpia de encapsular la retroalimentación visual negativa para el usuario. lo hice con ia
     JOptionPane.showMessageDialog(this, mensajeError, "Error de Login", JOptionPane.ERROR_MESSAGE); 
 }
 
