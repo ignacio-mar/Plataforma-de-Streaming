@@ -21,7 +21,7 @@ public class PanelConImagen extends JPanel {
         }
         private void dibujar(Graphics g) {
             if (imagen != null) {
-                // Dibuja la imagen, estirándola al tamaño actual del panel.
+                // Dibuja la imagen, estirándola al tamaño actual del panel
                 g.drawImage(imagen,10, 45, 580, 470, this);
             } else {
                 // Si la imagen no cargó, pintamos un fondo negro
@@ -32,7 +32,7 @@ public class PanelConImagen extends JPanel {
             }
         }
 
-        // EL MÉTODO DE CICLO DE VIDA DE SWING )
+        // EL MÉTODO DE CICLO DE VIDA DE SWING 
         @Override
         public void paint(Graphics g) {
     

@@ -24,6 +24,8 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
         "SELECT * FROM USUARIO WHERE DNI_PERSONA = ?";
     private static final String SELECT_ALL_SQL = 
         "SELECT * FROM USUARIO";
+        private static final String SELECT_BY_EMAIL_SQL = 
+        "SELECT * FROM USUARIO WHERE EMAIL = ?";
 
     private final Connection conexion;
     private final DatosPersonalesDAO datosPersonalesDAO;
@@ -105,6 +107,26 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
     public Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario) throws SQLException {
         try (PreparedStatement stmt = conexion.prepareStatement(SELECT_BY_USERNAME_SQL)) {
             stmt.setString(1, nombreUsuario);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Usuario usuario = new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nombre_usuario"),
+                        rs.getString("email"),
+                        rs.getString("contrasenia"),
+                        rs.getInt("dni_persona")
+                    );
+                    return Optional.of(usuario);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    @Override
+    public Optional<Usuario> buscarPorEmail(String email) throws SQLException {
+        try (PreparedStatement stmt = conexion.prepareStatement(SELECT_BY_EMAIL_SQL)) {
+            stmt.setString(1, email);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

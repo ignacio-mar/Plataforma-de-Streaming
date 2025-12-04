@@ -23,7 +23,7 @@ public LoginView() {
     setResizable(false);
     setLayout(new GridLayout(1,2));
     
-    //--------- PARTE IZQUIERDA: TRABAJAMOS CON LA IMAGEN -----------
+    //--------- PARTE IZQUIERDA -----------
     PanelConImagen panelIzquierdo = new PanelConImagen("/"+url_name);
     add(panelIzquierdo);// Agregamos el panel izquierdo al JFrame
 
@@ -46,7 +46,6 @@ public LoginView() {
     formulario.setLayout(new GridLayout(2,2,10,10));
     
     // Nombre de usuario
-    
     etiquetaNombreUsuario = new JLabel("Nombre de Usuario:");
     etiquetaNombreUsuario.setFont(fuenteNegrita);
     formulario.add(etiquetaNombreUsuario);
@@ -83,7 +82,7 @@ public LoginView() {
     panelRegistro.add(mensajeRegistro);
     panelRegistro.add(botonRegistrar);
 
-   // Uso GridBAgCOnstraints para centrar el formulario y el boton
+   // Uso GridBAgConstraints para centrar el formulario y el boton
       // Posicionar el formulario
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.insets = new Insets(70, 10, 5, 10); // Margen alrededor del formulario

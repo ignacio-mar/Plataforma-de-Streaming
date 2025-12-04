@@ -23,13 +23,24 @@ public class ReseñasService {
         this.peliculasDao = peliculasDao;
     }
 
-    public Optional<Usuario> autenticarUsuario(String nombreUsuario, String contrasenia) throws SQLException {
-        Optional<Usuario> optUsuario = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
-        if (optUsuario.isPresent() && optUsuario.get().getContrasenia().equals(contrasenia)) {
-            return optUsuario;
+    public Usuario autenticarUsuario(String nombreUsuario, String contrasenia) throws SQLException {
+      Optional<Usuario> usuarioOpt = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
+
+        // 2. Comprobar si el contenedor está lleno
+        if (usuarioOpt.isPresent()) {
+            
+            // 3. ¡CORRECCIÓN! Usar .get() para extraer el objeto del contenedor.
+            Usuario usuario = usuarioOpt.get(); 
+            
+            // 4. Continuar con la verificación de la contraseña
+            if (usuario.getContrasenia().equals(contrasenia)) {
+                return usuario; // Retornamos el objeto Usuario real
+            }
         }
-        return Optional.empty();
-    }
+
+        // Si la Optional estaba vacía o la contraseña falló, retorna null
+        return null;
+        }
 
     public List<Pelicula> listarPeliculasDisponibles() throws SQLException {
         return peliculasDao.listarTodos();

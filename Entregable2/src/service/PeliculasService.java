@@ -141,9 +141,7 @@ public class PeliculasService {
                 Idiomas audio = idiomaOriginal;
                 Idiomas subtitulos = Idiomas.CASTELLANO;
 
-                Pelicula pelicula = new Pelicula(
-                        title,
-                        elenco,
+                Pelicula pelicula = new Pelicula( title, elenco,
                         director,
                         genero,
                         duracion,

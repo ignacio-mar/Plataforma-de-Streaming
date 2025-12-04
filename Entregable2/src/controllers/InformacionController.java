@@ -1,13 +1,13 @@
 package controllers;
 
-import modelo.Pelicula;
-import modelo.service.OmdbService;
-import views.InformacionVista;
+import model.Pelicula;
+import model.service.OmdbService;
+import view.informacion.InformacionVista;
 import java.awt.event.ActionListener;
 import javax.swing.SwingUtilities;
-import modelo.exceptions.BusquedaInvalidaException;
-import modelo.exceptions.ErrorConexionAPIException;
-import modelo.exceptions.PeliculaNoEncontradaException;
+import model.exceptions.BusquedaInvalidaException;
+import model.exceptions.ErrorConexionAPIException;
+import model.exceptions.PeliculaNoEncontradaException;
 
 
 public class InformacionController {

@@ -36,6 +36,10 @@ public class UsuariosService {
     public boolean personaExiste(int dni) throws SQLException {
         return dpDao.buscarPorDni(dni).isPresent();
     }
+    // Nuevo método en UsuariosService
+    public boolean emailExiste(String email) throws SQLException {
+        return usuariosDao.buscarPorEmail(email).isPresent();
+    }
 
     public Usuario crearUsuario(String nombreUsuario, String email, String contrasenia, int dni) 
             throws SQLException {
@@ -79,7 +83,24 @@ public class UsuariosService {
 
     public String obtenerNombreCompletoPersona(int dni) throws SQLException {
         Optional<DatosPersonales> persona = dpDao.buscarPorDni(dni);
-        return persona.map(p -> p.getNombres() + " " + p.getApellido())
+        return persona.map(p -> p.getNombres() + " " + p.getApellidos())
                       .orElse("(persona no encontrada)");
+    }}
+    
+   /*public Usuario validarCredenciales(String nombreUsuario, String contrasenia) throws SQLException {
+    // 1. Buscamos si el usuario existe en la BD
+    Optional<Usuario> usuarioOpt = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
+
+    if (usuarioOpt.isPresent()) {
+        Usuario usuario = usuarioOpt.get();
+        
+        // 2. Comparamos la contraseña de la BD con la que ingresó el usuario
+        // IMPORTANTE: Usar .equals(), NO ==
+        if (usuario.getContrasenia().equals(contrasenia)) {
+            return usuario; // ¡Login Exitoso! Devolvemos el usuario
+        }
     }
+    
+    return null; // Usuario no encontrado O contraseña incorrecta
 }
+}*/

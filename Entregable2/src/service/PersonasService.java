@@ -54,8 +54,7 @@ public class PersonasService {
 
     public boolean actualizarPersona(int id, String nombre, String apellido, int dni, Paises pais, String telefono) 
             throws SQLException {
-        DatosPersonales mod = new DatosPersonales(nombre, apellido, dni, pais, telefono);
-        mod.setId(id);
+        DatosPersonales mod = new DatosPersonales(id, nombre, apellido, dni, pais, telefono);
         return dpDao.actualizar(mod);
     }
 

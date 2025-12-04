@@ -49,7 +49,7 @@ public class TestPeliculasGUI extends JFrame {
         txtLog.setText("");
         txtLog.append("Iniciando importación desde CSV...\n\n");
 
-        String rutaCsv = "C:\\Users\\feder\\OneDrive\\Documentos\\GitHub\\Plataforma-de-Streaming\\Entregable2\\lib\\movies_database.csv";
+        String rutaCsv = "C:\\Users\ignac\OneDrive\\Documentos\\GitHub\\Plataforma-de-Streaming\\Entregable2\\lib\\movies_database.csv";
 
         peliculasService.importarDesdeCsvAsync(
                 rutaCsv,
@@ -82,7 +82,7 @@ public class TestPeliculasGUI extends JFrame {
                 (porcentaje) -> SwingUtilities.invokeLater(() -> progressBar.setValue(porcentaje))
         );
     }
-
+/* 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             TestPeliculasGUI frame = new TestPeliculasGUI();
@@ -90,3 +90,4 @@ public class TestPeliculasGUI extends JFrame {
         });
     }
 }
+*/
