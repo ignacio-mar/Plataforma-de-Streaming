@@ -4,16 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Consumer; 
+import java.util.function.Consumer;
 import javax.swing.*;
 import model.Pelicula;
 import model.Usuario;
+import model.exceptions.BusquedaInvalidaException;
+import model.exceptions.ErrorConexionAPIException;
+import model.exceptions.PeliculaNoEncontradaException;
+import model.service.OmdbService;
 import service.PeliculasService;
 import service.PersonasService;
 import service.ReseñasService;
 import service.UsuariosService;
 import view.login.LoginView;
-import view.menuPrincipal.*; 
+import view.menuPrincipal.*;
+
 
 public class BienvenidaController implements ActionListener {
 
@@ -25,13 +30,16 @@ public class BienvenidaController implements ActionListener {
     private final ReseñasService reseñasService;
     private final PanelContenidoPrincipal panelListo;
 
+    private final OmdbService omdbService = new OmdbService();
+
+
     public BienvenidaController(
-        BienvenidaView vista, 
-        Usuario usuarioLogueado, 
-        PeliculasService peliculasService, 
-        ReseñasService reseñasService, 
-        PersonasService personasService, 
-        UsuariosService usuarioService
+            BienvenidaView vista,
+            Usuario usuarioLogueado,
+            PeliculasService peliculasService,
+            ReseñasService reseñasService,
+            PersonasService personasService,
+            UsuariosService usuarioService
     ) {
         this.vista = vista;
         this.usuarioLogueado = usuarioLogueado;
@@ -41,14 +49,13 @@ public class BienvenidaController implements ActionListener {
         this.reseñasService = reseñasService;
         this.panelListo = vista.panelListo;
 
-        // CONFIGURACIÓN INICIAL
         configurarVistaInicial();
 
-        // LISTENERS
-        this.panelListo.btnCerrarSesion.addActionListener(this);
-        this.panelListo.btnBuscar.addActionListener(this);
-        this.panelListo.btnIniciarCarga.addActionListener(this);
+        panelListo.btnCerrarSesion.addActionListener(this);
+        panelListo.btnBuscar.addActionListener(this);
+        panelListo.btnIniciarCarga.addActionListener(this);
     }
+
 
     private void configurarVistaInicial() {
         panelListo.lblNombreUsuario.setText("Bienvenido, " + usuarioLogueado.getNombreUsuario());
@@ -56,49 +63,38 @@ public class BienvenidaController implements ActionListener {
         vista.setVisible(true);
     }
 
+
     private void iniciarCargaPeliculas() {
+
         panelListo.btnIniciarCarga.setEnabled(false);
         vista.mostrarTarjeta(BienvenidaView.NOMBRE_CARGA);
 
         String rutaCsv = BienvenidaView.RUTA_CSV_PELICULAS;
 
-        // ==========================
-        // onError
-        // ==========================
         Consumer<Exception> onError = (ex) -> SwingUtilities.invokeLater(() -> {
-            mostrarError("ERROR CRÍTICO durante la importación: " + ex.getMessage());
+            mostrarError("ERROR durante la importación: " + ex.getMessage());
             panelListo.btnIniciarCarga.setEnabled(true);
             vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
         });
 
-        // ==========================
-        // onProgress
-        // ==========================
         Consumer<Integer> onProgress = (porcentaje) -> SwingUtilities.invokeLater(() -> {
             vista.progressBar.setValue(porcentaje);
         });
 
-        // ==========================
-        // onSuccess
-        // ==========================
         Runnable onSuccess = () -> SwingUtilities.invokeLater(() -> {
-            List<Pelicula> lista;
-
             try {
+                List<Pelicula> lista;
+
                 if (usuarioLogueado.isPrimerAcceso()) {
-                    // PRIMERA VEZ: TOP 10
+
                     lista = peliculasService.obtenerTop10PorRating();
 
-                    // Cambiamos el flag en memoria
                     usuarioLogueado.setPrimerAcceso(false);
-
-                    // Persistimos TODO el usuario, incluido PRIMER_ACCESO
                     usuarioService.actualizarUsuario(usuarioLogueado);
 
                 } else {
-                    // ACCESOS POSTERIORES: 10 al azar excluyendo reseñadas
                     lista = peliculasService.obtener10RandomExcluyendo(
-                        usuarioLogueado.getPeliculasResenadas()
+                            usuarioLogueado.getPeliculasResenadas()
                     );
                 }
 
@@ -106,18 +102,73 @@ public class BienvenidaController implements ActionListener {
                 vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
 
             } catch (SQLException ex) {
-                mostrarError("Error al cargar películas o actualizar estado: " + ex.getMessage());
+                mostrarError("Error al cargar películas: " + ex.getMessage());
                 vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
             }
         });
 
-        // Llamada final al servicio asíncrono
         peliculasService.importarDesdeCsvAsync(rutaCsv, onSuccess, onError, onProgress);
     }
+
 
     private void cargarPeliculasEnLista(List<Pelicula> peliculas) {
         panelListo.mostrarPeliculas(peliculas);
     }
+
+private void buscarPelicula() {
+    String tituloBuscado = panelListo.txtBuscador.getText().trim();
+
+    try {
+        // Si el término es inválido, OmdbService va a tirar BusquedaInvalidaException
+        Pelicula pelicula = omdbService.buscarPelicula(tituloBuscado);
+
+        // Ventana con datos reales de la peli
+        InformacionPeliculaView infoView = new InformacionPeliculaView(
+                vista,
+                pelicula.getTitulo(),
+                pelicula.getAnio(),
+                pelicula.getSinopsis()
+        );
+        infoView.setVisible(true);
+
+    } catch (BusquedaInvalidaException ex) {
+        JOptionPane.showMessageDialog(
+                vista,
+                ex.getMessage(),
+                "Búsqueda inválida",
+                JOptionPane.WARNING_MESSAGE
+        );
+
+    } catch (PeliculaNoEncontradaException ex) {
+        // Si no se encuentra la película, mostramos:
+        // - Título buscado
+        // - Resumen "No se encuentra disponible"
+        InformacionPeliculaView infoView = new InformacionPeliculaView(
+                vista,
+                tituloBuscado,
+                0,                              // año no disponible
+                "No se encuentra disponible."
+        );
+        infoView.setVisible(true);
+
+    } catch (ErrorConexionAPIException ex) {
+        JOptionPane.showMessageDialog(
+                vista,
+                "No se pudo consultar la API de películas.\nDetalle: " + ex.getMessage(),
+                "Error de conexión",
+                JOptionPane.ERROR_MESSAGE
+        );
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(
+                vista,
+                "Ocurrió un error inesperado al buscar la película.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+}
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -129,35 +180,15 @@ public class BienvenidaController implements ActionListener {
             iniciarCargaPeliculas();
         }
     }
-    
+
+
     private void cerrarSesion() {
         vista.dispose();
-        LoginView nuevaLoginView = new LoginView();
-        
-        new LoginController(
-            nuevaLoginView, 
-            this.usuarioService, 
-            this.personasService,
-            this.peliculasService,
-            this.reseñasService
-        );
-        
-        nuevaLoginView.setVisible(true);
+        LoginView lv = new LoginView();
+        new LoginController(lv, usuarioService, personasService, peliculasService, reseñasService);
+        lv.setVisible(true);
     }
-    
-    private void buscarPelicula() {
-        String tituloBuscado = panelListo.txtBuscador.getText().trim();
-        if (tituloBuscado.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                vista, 
-                "Ingrese un título para buscar.", 
-                "Validación", 
-                JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-        System.out.println("Buscando película: " + tituloBuscado);
-    }
+
 
     private void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(vista, mensaje, "Error", JOptionPane.ERROR_MESSAGE);

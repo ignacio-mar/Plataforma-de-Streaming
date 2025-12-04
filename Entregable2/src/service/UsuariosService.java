@@ -12,21 +12,12 @@ public class UsuariosService {
     private final UsuariosDAO usuariosDao;
     private final DatosPersonalesDAO datosPersonalesDao;
 
-    /**
-     * Service de usuarios: orquesta lógica de negocio y delega en el DAO.
-     */
+
     public UsuariosService(UsuariosDAO usuariosDao, DatosPersonalesDAO datosPersonalesDao) {
         this.usuariosDao = usuariosDao;
         this.datosPersonalesDao = datosPersonalesDao;
     }
 
-    // =====================================================
-    // VALIDACIONES USADAS EN REGISTRO
-    // =====================================================
-
-    /**
-     * Valida formato básico de email y unicidad en la BD.
-     */
     public boolean validarEmail(String email) {
         if (email == null || email.isBlank()) {
             return false;
@@ -45,9 +36,6 @@ public class UsuariosService {
         }
     }
 
-    /**
-     * Valida nombre de usuario: no vacío, longitud mínima y unicidad.
-     */
     public boolean validarNombreUsuario(String nombreUsuario) {
         if (nombreUsuario == null || nombreUsuario.isBlank()) {
             return false;
