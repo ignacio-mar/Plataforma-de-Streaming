@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 import model.Usuario;
 import service.*;
 import view.login.*;
-import view.registrarse.RegistrarseView;
-import view.menuPrincipal.BienvenidaView; 
+import view.login.menuPrincipal.BienvenidaView;
+import view.registrarse.RegistrarseView; 
 
 public class LoginController {
 

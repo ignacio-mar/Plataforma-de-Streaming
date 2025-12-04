@@ -85,7 +85,10 @@ public class UsuariosService {
         Optional<DatosPersonales> persona = dpDao.buscarPorDni(dni);
         return persona.map(p -> p.getNombres() + " " + p.getApellidos())
                       .orElse("(persona no encontrada)");
-    }}
+    }
+
+
+}
     
    /*public Usuario validarCredenciales(String nombreUsuario, String contrasenia) throws SQLException {
     // 1. Buscamos si el usuario existe en la BD

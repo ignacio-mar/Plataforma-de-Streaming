@@ -1,4 +1,4 @@
-package view.menuPrincipal;
+package view.login.menuPrincipal;
 
 import javax.swing.*;
 import java.awt.*;
