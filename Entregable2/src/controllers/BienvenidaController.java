@@ -1,34 +1,31 @@
 package controllers;
 
-import view.menuPrincipal.*;
-import view.login.LoginView;
-import service.PeliculasService;
-import service.ReseñasService;
-import service.UsuariosService; 
-import service.PersonasService; 
-import model.Usuario;
-import model.Pelicula;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.swing.SwingUtilities; 
+import javax.swing.*;
+import model.Pelicula;
+import model.Usuario;
+import service.PeliculasService;
+import service.PersonasService;
+import service.ReseñasService;
+import service.UsuariosService;
+import view.login.LoginView;
+import view.menuPrincipal.*;
 
 public class BienvenidaController implements ActionListener {
 
     private final BienvenidaView vista;
     private final Usuario usuarioLogueado;
-    
+
     private final UsuariosService usuarioService; 
-    private final PersonasService personasService; 
-    
+    private final PersonasService personasService;
     private final PeliculasService peliculasService;
     private final ReseñasService reseñasService;
 
-    private final PanelContenidoPrincipal panelListo; 
+    private final PanelContenidoPrincipal panelListo;
 
     public BienvenidaController(
         BienvenidaView vista, 
@@ -44,9 +41,8 @@ public class BienvenidaController implements ActionListener {
         this.personasService = personasService;
         this.peliculasService = peliculasService;
         this.reseñasService = reseñasService;
-        this.panelListo = vista.panelListo; 
+        this.panelListo = vista.panelListo;
 
-        // CONFIGURACION INICIAL
         configurarVistaInicial();
 
         this.panelListo.btnCerrarSesion.addActionListener(this);
@@ -56,29 +52,48 @@ public class BienvenidaController implements ActionListener {
     
     private void configurarVistaInicial() {
         panelListo.lblNombreUsuario.setText("Bienvenido, " + usuarioLogueado.getNombreUsuario());
-        vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO); 
+        vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
         vista.setVisible(true);
     }
-    
+
     private void iniciarCargaPeliculas() {
         panelListo.btnIniciarCarga.setEnabled(false);
         vista.mostrarTarjeta(BienvenidaView.NOMBRE_CARGA);
-        
+
         String rutaCsv = BienvenidaView.RUTA_CSV_PELICULAS;
-        
+
         Runnable onSuccess = () -> SwingUtilities.invokeLater(() -> {
             try {
-                //  Obtener Top 10
-                List<Pelicula> top10 = peliculasService.obtenerTop10PorRating();
-                
-                // Llamamos al método nuevo de la vista que usa las filas detalladas
-                cargarPeliculasEnLista(top10); 
+                List<Pelicula> lista;
 
-                // Mostrar contenido
-                vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO); 
-                
+                // -------------------------------
+                // PRIMERA VEZ: TOP 10
+                // -------------------------------
+                if (usuarioLogueado.isPrimerAcceso()) {
+
+                    lista = peliculasService.obtenerTop10PorRating();
+
+                    usuarioLogueado.setPrimerAcceso(false);
+
+                    usuarioService.actualizarUsuario(
+                            usuarioLogueado.getId(),
+                            usuarioLogueado.getNombreUsuario(),
+                            usuarioLogueado.getEmail(),
+                            usuarioLogueado.getContrasenia(),
+                            usuarioLogueado.getDniPersona()
+                    );
+
+                } else {
+                    lista = peliculasService.obtener10RandomExcluyendo(
+                            usuarioLogueado.getPeliculasResenadas()
+                    );
+                }
+
+                cargarPeliculasEnLista(lista);
+                vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
+
             } catch (SQLException ex) {
-                mostrarError("Error al obtener Top 10: " + ex.getMessage());
+                mostrarError("Error al cargar películas: " + ex.getMessage());
                 vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
             }
         });
@@ -86,19 +101,22 @@ public class BienvenidaController implements ActionListener {
         Consumer<Exception> onError = (ex) -> SwingUtilities.invokeLater(() -> {
             mostrarError("ERROR CRÍTICO: " + ex.getMessage());
             panelListo.btnIniciarCarga.setEnabled(true);
-            vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO); 
+            vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
         });
-
 
         Consumer<Integer> onProgress = (porcentaje) -> SwingUtilities.invokeLater(() -> {
             vista.progressBar.setValue(porcentaje);
         });
-        
-        peliculasService.importarDesdeCsvAsync(rutaCsv, onSuccess, onError, onProgress);
+
+        peliculasService.importarDesdeCsvAsync(
+                rutaCsv,
+                onSuccess,
+                onError,
+                onProgress
+        );
     }
 
     private void cargarPeliculasEnLista(List<Pelicula> peliculas) {
-        // le pasamos  la creación de los paneles visuales a la Vista
         panelListo.mostrarPeliculas(peliculas);
     }
 
@@ -114,7 +132,7 @@ public class BienvenidaController implements ActionListener {
     }
     
     private void cerrarSesion() {
-        vista.dispose(); 
+        vista.dispose();
         LoginView nuevaLoginView = new LoginView();
         
         new LoginController(
@@ -131,7 +149,8 @@ public class BienvenidaController implements ActionListener {
     private void buscarPelicula() {
         String tituloBuscado = panelListo.txtBuscador.getText().trim();
         if (tituloBuscado.isEmpty()) {
-            JOptionPane.showMessageDialog(vista, "Ingrese un título para buscar.", "Validación", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(vista, "Ingrese un título para buscar.", 
+                    "Validación", JOptionPane.WARNING_MESSAGE);
             return;
         }
         System.out.println("Buscando película: " + tituloBuscado);

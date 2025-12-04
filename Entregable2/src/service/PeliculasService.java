@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -200,6 +201,27 @@ public class PeliculasService {
         }
         int n = Math.min(10, cachePeliculas.size());
         return new ArrayList<>(cachePeliculas.subList(0, n));
+    }
+
+    public List<Pelicula> obtener10RandomExcluyendo(List<Integer> idsExcluidas) throws SQLException {
+        // si la caché está vacía, cargo todas las pelis una sola vez
+        if (cachePeliculas.isEmpty()) {
+            cachePeliculas.addAll(peliculasDao.listarTodos());
+            ordenarCachePorRatingDesc(); // si querés mantener el orden para otros usos
+        }
+
+        List<Pelicula> candidatas = new ArrayList<>();
+        for (Pelicula p : cachePeliculas) {
+            if (idsExcluidas == null || !idsExcluidas.contains(p.getId())) {
+                candidatas.add(p);
+            }
+        }
+
+        // Mezclo la lista
+        Collections.shuffle(candidatas);
+
+        int n = Math.min(10, candidatas.size());
+        return new ArrayList<>(candidatas.subList(0, n));
     }
 
     private List<String> parseLineCsv(String line) {

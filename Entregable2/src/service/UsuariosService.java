@@ -86,24 +86,15 @@ public class UsuariosService {
         return persona.map(p -> p.getNombres() + " " + p.getApellidos())
                       .orElse("(persona no encontrada)");
     }
+public void marcarPeliculaComoResenada(Usuario usuario, int idPelicula) throws SQLException {
+    // 1. Actualiza el objeto en memoria (IMPORTANTE para no perder el dato en esta sesión)
+    usuario.agregarPeliculaResenada(idPelicula);
+    
+    // 2. Llama al DAO para persistir el cambio
+    usuariosDao.actualizarPeliculasResenadas(usuario); 
+    // ^ Este es un NUEVO método que debes crear en tu UsuariosDAOjdbc.
+}
+
 
 
 }
-    
-   /*public Usuario validarCredenciales(String nombreUsuario, String contrasenia) throws SQLException {
-    // 1. Buscamos si el usuario existe en la BD
-    Optional<Usuario> usuarioOpt = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
-
-    if (usuarioOpt.isPresent()) {
-        Usuario usuario = usuarioOpt.get();
-        
-        // 2. Comparamos la contraseña de la BD con la que ingresó el usuario
-        // IMPORTANTE: Usar .equals(), NO ==
-        if (usuario.getContrasenia().equals(contrasenia)) {
-            return usuario; // ¡Login Exitoso! Devolvemos el usuario
-        }
-    }
-    
-    return null; // Usuario no encontrado O contraseña incorrecta
-}
-}*/
