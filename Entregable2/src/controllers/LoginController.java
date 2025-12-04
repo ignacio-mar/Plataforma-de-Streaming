@@ -55,14 +55,21 @@ public class LoginController {
         String contrasena = new String(loginView.getContrasena());
         
         try {
+            System.out.println("[DEBUG] Intentando autenticar usuario: " + nombreUsuario);
+            
             // Llamar al servicio de autenticación
             Usuario usuario = reseñasService.autenticarUsuario(nombreUsuario, contrasena);  
 
             if (usuario != null) {
+                System.out.println("[DEBUG] Usuario autenticado: " + usuario.getNombreUsuario());
+                
                 // Usuario autenticado correctamente
+                System.out.println("[DEBUG] Creando BienvenidaView...");
                 BienvenidaView bienvenidaView = new BienvenidaView();
+                System.out.println("[DEBUG] BienvenidaView creada");
                 
                 // Crear el controlador de Bienvenida pasando las dependencias necesarias
+                System.out.println("[DEBUG] Creando BienvenidaController...");
                 new BienvenidaController(
                     bienvenidaView, 
                     usuario, 
@@ -71,6 +78,7 @@ public class LoginController {
                     personasService,
                     usuariosService
                 );
+                System.out.println("[DEBUG] BienvenidaController creado");
 
                 // Mostrar la ventana de bienvenida
                 bienvenidaView.setVisible(true);
@@ -81,8 +89,13 @@ public class LoginController {
                 loginView.mostrarMensajeError();
             }
         } catch (SQLException ex) {
+            System.out.println("[ERROR] SQLException en iniciarSesion:");
             ex.printStackTrace();
             JOptionPane.showMessageDialog(loginView, "Error de conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            System.out.println("[ERROR] Excepción general en iniciarSesion:");
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(loginView, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

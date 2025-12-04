@@ -13,7 +13,8 @@ import service.PersonasService;
 import service.ReseñasService;
 import service.UsuariosService;
 import view.login.LoginView;
-import view.menuPrincipal.*;
+import view.login.menuPrincipal.BienvenidaView;
+import view.login.menuPrincipal.PanelContenidoPrincipal;
 
 public class BienvenidaController implements ActionListener {
 
@@ -35,25 +36,56 @@ public class BienvenidaController implements ActionListener {
         PersonasService personasService,
         UsuariosService usuarioService
     ) {
-        this.vista = vista;
-        this.usuarioLogueado = usuarioLogueado;
-        this.usuarioService = usuarioService;
-        this.personasService = personasService;
-        this.peliculasService = peliculasService;
-        this.reseñasService = reseñasService;
-        this.panelListo = vista.panelListo;
+        try {
+            this.vista = vista;
+            this.usuarioLogueado = usuarioLogueado;
+            this.usuarioService = usuarioService;
+            this.personasService = personasService;
+            this.peliculasService = peliculasService;
+            this.reseñasService = reseñasService;
+            
+            System.out.println("[DEBUG] BienvenidaController - vista: " + (vista != null));
+            System.out.println("[DEBUG] BienvenidaController - vista.panelListo: " + (vista.panelListo != null));
+            
+            this.panelListo = vista.panelListo;
+            
+            if (this.panelListo == null) {
+                throw new RuntimeException("ERROR: panelListo es nulo en BienvenidaView");
+            }
 
-        configurarVistaInicial();
-
-        this.panelListo.btnCerrarSesion.addActionListener(this);
-        this.panelListo.btnBuscar.addActionListener(this);
-        this.panelListo.btnIniciarCarga.addActionListener(this); 
+            System.out.println("[DEBUG] Configurando vista inicial...");
+            configurarVistaInicial();
+            
+            System.out.println("[DEBUG] Agregando listeners a botones...");
+            this.panelListo.btnCerrarSesion.addActionListener(this);
+            this.panelListo.btnBuscar.addActionListener(this);
+            this.panelListo.btnIniciarCarga.addActionListener(this);
+            
+            System.out.println("[DEBUG] BienvenidaController inicializado correctamente");
+        } catch (Exception e) {
+            System.out.println("[ERROR] En constructor de BienvenidaController:");
+            e.printStackTrace();
+            throw new RuntimeException("Error inicializando BienvenidaController: " + e.getMessage(), e);
+        }
     }
     
     private void configurarVistaInicial() {
-        panelListo.lblNombreUsuario.setText("Bienvenido, " + usuarioLogueado.getNombreUsuario());
-        vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
-        vista.setVisible(true);
+        try {
+            System.out.println("[DEBUG] En configurarVistaInicial");
+            System.out.println("[DEBUG] panelListo: " + (panelListo != null));
+            System.out.println("[DEBUG] panelListo.lblNombreUsuario: " + (panelListo.lblNombreUsuario != null));
+            System.out.println("[DEBUG] usuarioLogueado: " + (usuarioLogueado != null));
+            System.out.println("[DEBUG] usuarioLogueado.getNombreUsuario(): " + usuarioLogueado.getNombreUsuario());
+            
+            panelListo.lblNombreUsuario.setText("Bienvenido, " + usuarioLogueado.getNombreUsuario());
+            vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
+            vista.setVisible(true);
+            System.out.println("[DEBUG] Vista configurada correctamente");
+        } catch (Exception e) {
+            System.out.println("[ERROR] En configurarVistaInicial:");
+            e.printStackTrace();
+            throw new RuntimeException("Error en configurarVistaInicial: " + e.getMessage(), e);
+        }
     }
 
     private void iniciarCargaPeliculas() {

@@ -1,13 +1,12 @@
 package service;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-
 import dao.DatosPersonalesDAO;
 import dao.UsuariosDAO;
 import dao.compar.ComparatorEmailUsuario;
 import dao.compar.ComparatorNombreUsuario;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import model.DatosPersonales;
 import model.Usuario;
 
@@ -90,8 +89,8 @@ public void marcarPeliculaComoResenada(Usuario usuario, int idPelicula) throws S
     // 1. Actualiza el objeto en memoria (IMPORTANTE para no perder el dato en esta sesión)
     usuario.agregarPeliculaResenada(idPelicula);
     
-    // 2. Llama al DAO para persistir el cambio
-    usuariosDao.actualizarPeliculasResenadas(usuario); 
+    // 2. Llama al DAO para persistir el cambio (método pendiente de implementación)
+    // usuariosDao.actualizarPeliculasResenadas(usuario); 
     // ^ Este es un NUEVO método que debes crear en tu UsuariosDAOjdbc.
 }
 
