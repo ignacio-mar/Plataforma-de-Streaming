@@ -1,4 +1,4 @@
-package view.login.menuPrincipal;
+package view.menuPrincipal;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
