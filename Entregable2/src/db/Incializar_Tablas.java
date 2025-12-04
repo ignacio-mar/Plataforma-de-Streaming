@@ -26,6 +26,7 @@ public class Incializar_Tablas {
         "EMAIL TEXT NOT NULL UNIQUE," +  
         "CONTRASENIA TEXT NOT NULL," +
         "DNI_PERSONA INTEGER NOT NULL," +
+        "PELICULAS_RESEÑADAS TEXT,"+
         "CONSTRAINT USUARIO_DATOS_PERSONALES_FK FOREIGN KEY (DNI_PERSONA) REFERENCES DATOS_PERSONALES(DNI)" +
         ");";
         stmt.executeUpdate(sql);
