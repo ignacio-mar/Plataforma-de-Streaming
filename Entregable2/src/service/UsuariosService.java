@@ -1,100 +1,164 @@
 package service;
 
+import dao.DatosPersonalesDAO;
+import dao.UsuariosDAO;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
-import dao.DatosPersonalesDAO;
-import dao.UsuariosDAO;
-import dao.compar.ComparatorEmailUsuario;
-import dao.compar.ComparatorNombreUsuario;
-import model.DatosPersonales;
 import model.Usuario;
 
 public class UsuariosService {
 
     private final UsuariosDAO usuariosDao;
-    private final DatosPersonalesDAO dpDao;
+    private final DatosPersonalesDAO datosPersonalesDao;
 
-    public UsuariosService(UsuariosDAO usuariosDao, DatosPersonalesDAO dpDao) {
+    /**
+     * Service de usuarios: orquesta lógica de negocio y delega en el DAO.
+     */
+    public UsuariosService(UsuariosDAO usuariosDao, DatosPersonalesDAO datosPersonalesDao) {
         this.usuariosDao = usuariosDao;
-        this.dpDao = dpDao;
+        this.datosPersonalesDao = datosPersonalesDao;
     }
 
-    public boolean validarNombreUsuario(String nombreUsuario) throws SQLException {
-        return !nombreUsuario.isEmpty() && usuariosDao.buscarPorNombreUsuario(nombreUsuario).isEmpty();
-    }
+    // =====================================================
+    // VALIDACIONES USADAS EN REGISTRO
+    // =====================================================
 
+    /**
+     * Valida formato básico de email y unicidad en la BD.
+     */
     public boolean validarEmail(String email) {
-        return !email.isEmpty() && email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        if (email == null || email.isBlank()) {
+            return false;
+        }
+        // Validación muy simple de formato
+        if (!email.contains("@") || !email.contains(".")) {
+            return false;
+        }
+        try {
+            // Debe ser único
+            return usuariosDao.buscarPorEmail(email).isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Si hay error de BD, lo consideramos inválido
+            return false;
+        }
     }
 
+    /**
+     * Valida nombre de usuario: no vacío, longitud mínima y unicidad.
+     */
+    public boolean validarNombreUsuario(String nombreUsuario) {
+        if (nombreUsuario == null || nombreUsuario.isBlank()) {
+            return false;
+        }
+        // Por ejemplo, mínimo 4 caracteres
+        if (nombreUsuario.length() < 4) {
+            return false;
+        }
+        try {
+            // Debe ser único
+            return usuariosDao.buscarPorNombreUsuario(nombreUsuario).isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Valida contraseña: regla básica de longitud mínima.
+     * (Si tu TP tenía una política más compleja, podés ajustarla acá).
+     */
     public boolean validarContrasenia(String contrasenia) {
+        if (contrasenia == null || contrasenia.isBlank()) {
+            return false;
+        }
+        // Por ejemplo, mínimo 6 caracteres
         return contrasenia.length() >= 6;
     }
 
-    public boolean personaExiste(int dni) throws SQLException {
-        return dpDao.buscarPorDni(dni).isPresent();
-    }
-    // Nuevo método en UsuariosService
-    public boolean emailExiste(String email) throws SQLException {
-        return usuariosDao.buscarPorEmail(email).isPresent();
-    }
+    /**
+     * Crea y persiste un usuario nuevo asociado al DNI dado.
+     * Lanza SQLException si falla algo en la BD (DNI inexistente, duplicados, etc.).
+     *
+     * Esta firma coincide con la que el RegistroController está esperando:
+     *  crearUsuario(String nombreUsuario, String email, String contrasenia, int dniPersona)
+     */
+    public Usuario crearUsuario(String nombreUsuario,
+                                String email,
+                                String contrasenia,
+                                int dniPersona) throws SQLException {
 
-    public Usuario crearUsuario(String nombreUsuario, String email, String contrasenia, int dni) 
-            throws SQLException {
-        Usuario usuario = new Usuario(nombreUsuario, email, contrasenia, dni);
+        Usuario usuario = new Usuario(nombreUsuario, email, contrasenia, dniPersona);
+        // Usa el método del DAO que ya valida DNI, duplicados, etc.
         return usuariosDao.asociarUsuario(usuario);
     }
+
+    // =====================================================
+    // ALTAS (API algo más general, por si la usás en otro lado)
+    // =====================================================
+
+    public Usuario registrarUsuario(Usuario usuario) throws SQLException {
+        return usuariosDao.asociarUsuario(usuario);
+    }
+
+    // =====================================================
+    // BÚSQUEDAS / CONSULTAS
+    // =====================================================
 
     public Optional<Usuario> buscarPorId(int id) throws SQLException {
         return usuariosDao.buscarPorId(id);
     }
 
-    public Optional<Usuario> buscarPorNombreUsuario(String nombre) throws SQLException {
-        return usuariosDao.buscarPorNombreUsuario(nombre);
+    public Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario) throws SQLException {
+        return usuariosDao.buscarPorNombreUsuario(nombreUsuario);
     }
 
-    public List<Usuario> listarTodosPorNombre() throws SQLException {
-        List<Usuario> lista = usuariosDao.listarTodos();
-        lista.sort(ComparatorNombreUsuario.POR_NOMBRE_USUARIO);
-        return lista;
-    }
-
-    public List<Usuario> listarTodosPorEmail() throws SQLException {
-        List<Usuario> lista = usuariosDao.listarTodos();
-        lista.sort(ComparatorEmailUsuario.POR_EMAIL);
-        return lista;
+    public Optional<Usuario> buscarPorEmail(String email) throws SQLException {
+        return usuariosDao.buscarPorEmail(email);
     }
 
     public List<Usuario> listarTodos() throws SQLException {
         return usuariosDao.listarTodos();
     }
 
-    public boolean actualizarUsuario(int id, String nombreUsuario, String email, String contrasenia, int dniPersona) 
-            throws SQLException {
-        Usuario mod = new Usuario(id, nombreUsuario, email, contrasenia, dniPersona);
-        return usuariosDao.actualizar(mod);
+    public boolean existeNombreUsuario(String nombreUsuario) throws SQLException {
+        return usuariosDao.buscarPorNombreUsuario(nombreUsuario).isPresent();
     }
+
+    public boolean existeEmail(String email) throws SQLException {
+        return usuariosDao.buscarPorEmail(email).isPresent();
+    }
+
+    public boolean existePersonaConDni(int dni) throws SQLException {
+        return datosPersonalesDao.buscarPorDni(dni).isPresent();
+    }
+
+    // =====================================================
+    // ACTUALIZACIÓN (incluye PRIMER_ACCESO y PELICULAS_RESENADAS)
+    // =====================================================
+
+    /**
+     * Actualiza TODOS los datos del usuario en BD:
+     *  - NOMBRE_USUARIO
+     *  - EMAIL
+     *  - CONTRASENIA
+     *  - DNI_PERSONA
+     *  - PELICULAS_RESENADAS
+     *  - PRIMER_ACCESO
+     *
+     * IMPORTANTE: recibe el objeto Usuario YA MODIFICADO
+     * (por ejemplo, con setPrimerAcceso(false)).
+     */
+    public boolean actualizarUsuario(Usuario usuario) throws SQLException {
+        return usuariosDao.actualizar(usuario);
+    }
+
+    // =====================================================
+    // BAJA
+    // =====================================================
 
     public boolean eliminarUsuario(int id) throws SQLException {
         return usuariosDao.eliminar(id);
     }
-
-    public String obtenerNombreCompletoPersona(int dni) throws SQLException {
-        Optional<DatosPersonales> persona = dpDao.buscarPorDni(dni);
-        return persona.map(p -> p.getNombres() + " " + p.getApellidos())
-                      .orElse("(persona no encontrada)");
-    }
-public void marcarPeliculaComoResenada(Usuario usuario, int idPelicula) throws SQLException {
-    // 1. Actualiza el objeto en memoria (IMPORTANTE para no perder el dato en esta sesión)
-    usuario.agregarPeliculaResenada(idPelicula);
-    
-    // 2. Llama al DAO para persistir el cambio
-    usuariosDao.actualizarPeliculasResenadas(usuario); 
-    // ^ Este es un NUEVO método que debes crear en tu UsuariosDAOjdbc.
-}
-
-
-
 }
