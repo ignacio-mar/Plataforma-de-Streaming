@@ -1,36 +1,57 @@
+## Del proyecto
+- Este proyecto implementa una plataforma de streaming básica implementada en Java bajo el diseño de software bajo el patrón MVC. Este proyecto contempla conceptos como:
+* **Tecnología Principal:** Java SE
+* **Base de Datos:** SQLite
+* **Interfaz de Usuario:** Swing
 
-## De la implementación
+## Arquitectura y diseño 
 
-- **Patrones**: Se implementó el patrón _DAO_ para abstraer la lógica del acceso a los datos [cite: 2414, 2397]. El manejo de la conexión se maneja a través del uso del patrón **Singleton**.
-- **Mapeo**: La lógica de conversión entre objetos y filas de la base de datos ("ResultSet") se encapsula dentro del DAO.
-- **Ordenación**: Los listados (Usuarios y Películas) se ordenan utilizando la interfaz `java.util.Comparator` para permitir la selección de múltiples criterios (Título, Género, Email).
+- **Patrón MVC**: La totalidad del sistema se estructuró siguiendo el patrón MVC para lograr una clara abstracción de responsabilidades y modularidad.
 
----
-
-## Ejecución
-
-Para iniciar la ejecución de la aplicación, deberá tener el JDK instalado y la librería JDBC en el **classpath**.
-
-1. **Compilar y empaquetar**: El empaquetado estará presente en un archivo .jar ejecutable.
-2. **Ejecución**: Abrí la terminal en la carpeta que contiene el JAR y escribí el comando _`java -jar `_
-3. **Interacción**: El programa mostrará un menú de opciones para interactuar con las funcionalidades detalladas en la consigna.
+- **Modelo (model)**: Contiene la lógica de negocio y el acceso a datos (servicios DAO para la BD y OmdBService para la API).
+- **Vista (views)**: Se limita a la creación y presentación de la interfaz gráfica (Swing) y a capturar la interacción del usuario.
+- **Controlador (controllers)**: Comunica los eventos de la vista validándolos previamente y coordina la lógica del Modelo ordenando a la vista que se actualice.
 
 ---
 
-## Funcionalidades Implementadas (Criterios de Evaluación)
+## Implementaciones
 
-Se implementaron las siguientes funcionalidades requeridas para la Prueba de Concepto (POC):
+- **Concurrencia**: Se implementó la concurrencia para evitar el bloqueo del Hilo de Despacho de Evnetos (EDT) en operaciones lentas (como cargar la base de datos con el csv provisto).
 
-- *Registro de Datos Personales y del Usuario:* Contiene validaciones (DNI único, formato de Email `xxx@yyy`).
-- **Registro de Película**: El campo `Género` se valida usando un tipo *Enumerativo* (`Generos`).
-- **Listado de Usuarios**: Permite ordenar por **Nombre de Usuario** o **Email**, usando clases que implementan `Comparator`.
-- **Listado de Películas**: Permite ordenar por **Título**, **Género** o **Duración**, usando la interfaz `Comparator`.
-- **Gestión de Reseña**: Se implementan las funcionalidades de **Registrar Reseña** y **Aprobar Reseña**.
+* **Mecanismo:** La **Búsqueda en OMDb** y la **Importación de CSV** se ejecutan en **`Thread`** separados, implementados mediante `Runnable`.
+* **Anti-Bloqueo de GUI:** Se utiliza **`SwingUtilities.invokeLater()`** para garantizar que el resultado (ej. mostrar la película o el error) regrese al Hilo de Despacho de Eventos (EDT) de forma segura, manteniendo la interfaz fluida.
+
+### Manejo de Excepciones Propias
+- Se crearon tres excepciones personalizadas, para diferenciar los tipos de fallos y mostrar mensajes informativos y específicos al usuario.
+
+- **`ErrorConexionAPIException`**: Fallo de conexión o error HTTP/I/O (problema de infraestructura). 
+- **`PeliculaNoEncontradaException`**: El servicio externo respondió OK, pero el recurso no existe. 
+- **`BusquedaInvalidaException`**: El usuario ingresó texto de búsqueda vacío o inválido. 
 
 ---
 
-## Extras
+## Implementaciones Funcionales Clave
 
-Se dejaron cargadas algunas peliculas y un usuario para probar el sistema
-- user:Lionel
-- password:123123
+### Servicio OMDb y Parseo 
+
+* **`OmdbService`**: Implementa la consulta a la API de OMDb. Utiliza la librería `org.json` para realizar el **parsing del string JSON** recibido por el `HttpURLConnection` y convertirlo a un objeto `Pelicula` del Modelo.
+* **Consulta:** La llamada a este servicio es la que se ejecuta concurrentemente.
+
+### Persistencia y DAO 
+
+* **Tecnología:** Uso de **SQLite** como motor de base de datos a través de **JDBC**.
+* **Patrón:** Implementación de Data Access Objects (DAO) para manejar la conexión, las consultas y las transacciones, aislando el código SQL del Modelo de Negocio.
+* **Modelo Actualizado:** La tabla de películas fue modificada para incluir los campos **`anio`**, **`rating_promedio`** y **`poster`**.
+
+### Importación de CSV
+
+* **Carga:** Utiliza la concurrencia para leer el archivo CSV y persistir los datos en la base de datos de manera eficiente al inicio de la aplicación, minimizando los tiempos de espera.
+* **I/O:** Se emplean `BufferedReader` y `FileReader` para el manejo de los flujos de entrada.
+
+---
+
+## Autores 
+
+* **Bordalecu Campodonico**, Federico.
+* **Cappella**, Ezequiel.
+* **Martínez**, Ignacio. 
