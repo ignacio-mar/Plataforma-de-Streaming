@@ -19,6 +19,7 @@ import service.UsuariosService;
 import view.login.LoginView;
 import view.menuPrincipal.*;
 
+import java.awt.Component;
 
 public class BienvenidaController implements ActionListener {
 
@@ -81,6 +82,7 @@ public class BienvenidaController implements ActionListener {
             vista.progressBar.setValue(porcentaje);
         });
 
+        
         Runnable onSuccess = () -> SwingUtilities.invokeLater(() -> {
             try {
                 List<Pelicula> lista;
@@ -93,10 +95,13 @@ public class BienvenidaController implements ActionListener {
                     usuarioService.actualizarUsuario(usuarioLogueado);
 
                 } else {
+                    
                     lista = peliculasService.obtener10RandomExcluyendo(
-                            usuarioLogueado.getPeliculasResenadas()
-                    );
-                }
+                                    usuarioLogueado.getPeliculasResenadas()
+                            );
+
+                } 
+                    
 
                 cargarPeliculasEnLista(lista);
                 vista.mostrarTarjeta(BienvenidaView.NOMBRE_CONTENIDO);
@@ -110,10 +115,6 @@ public class BienvenidaController implements ActionListener {
         peliculasService.importarDesdeCsvAsync(rutaCsv, onSuccess, onError, onProgress);
     }
 
-
-    private void cargarPeliculasEnLista(List<Pelicula> peliculas) {
-        panelListo.mostrarPeliculas(peliculas);
-    }
 
 private void buscarPelicula() {
     String tituloBuscado = panelListo.txtBuscador.getText().trim();
@@ -193,4 +194,38 @@ private void buscarPelicula() {
     private void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(vista, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+
+    private void cargarPeliculasEnLista(List<Pelicula> peliculas) {
+            // le decimos a la vista que dibuje las filas
+            panelListo.mostrarPeliculas(peliculas);
+
+            // Ahora recorremos esas filas para conectar los botones
+            Component[] componentes = panelListo.panelListaPeliculas.getComponents();
+
+            for (Component comp : componentes) {
+                if (comp instanceof PanelFilaPelicula) {
+                    PanelFilaPelicula fila = (PanelFilaPelicula) comp;
+                    Pelicula peli = fila.getPelicula();
+
+                    
+                    boolean yaResenada = usuarioLogueado.getPeliculasResenadas().contains(peli.getId());
+
+                    if (yaResenada) {
+                      fila.marcarComoCalificada();
+                    } else {
+                        fila.getBtnCalificar().addActionListener(e -> {
+                            
+                            new CalificarController(
+                                vista,             
+                                usuarioLogueado,   
+                                fila,              
+                                usuarioService     
+                            );
+                        });
+                    }
+                }
+            }
+        }
 }
+

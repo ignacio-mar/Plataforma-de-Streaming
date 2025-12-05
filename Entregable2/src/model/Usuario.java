@@ -28,7 +28,6 @@ public class Usuario {
         this(0, nombreUsuario, email, contrasenia, dniPersona);
     }
 
-    // --- getters/setters básicos ---
 
     public int getId() {
         return id;
@@ -50,7 +49,6 @@ public class Usuario {
         return dniPersona;
     }
 
-    // --- nuevo: películas reseñadas ---
 
     public List<Integer> getPeliculasResenadas() {
         return peliculasResenadas;
@@ -68,7 +66,7 @@ public class Usuario {
         }
     }
 
-    // helpers para persistir en la columna TEXT PELICULAS_RESENADAS (formato "1,5,8,...")
+
 
     public String getPeliculasResenadasComoTexto() {
         if (peliculasResenadas == null || peliculasResenadas.isEmpty()) {
@@ -97,7 +95,7 @@ public class Usuario {
         }
     }
 
-    // --- nuevo: primer acceso ---
+    // primer acceso 
 
     public boolean isPrimerAcceso() {
         return primerAcceso;

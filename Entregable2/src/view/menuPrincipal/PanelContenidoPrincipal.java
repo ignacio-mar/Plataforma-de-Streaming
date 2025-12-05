@@ -117,12 +117,12 @@ public class PanelContenidoPrincipal extends JPanel {
     public void mostrarPeliculas(List<Pelicula> peliculas) {
         panelListaPeliculas.removeAll();
         
-        //  Por cada película, creamos una "Fila Perfecta" y la agregamos
+        //  Por cada película, creamos una fila y la agregamos
         for (Pelicula p : peliculas) {
             panelListaPeliculas.add(new PanelFilaPelicula(p));
         }
         
-        // refrescamos la interfaz para que aparezcan los cambios
+        // actualizamos la interfaz para que aparezcan los cambios
         panelListaPeliculas.revalidate();
         panelListaPeliculas.repaint();
     }

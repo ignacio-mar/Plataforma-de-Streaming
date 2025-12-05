@@ -26,13 +26,13 @@ public class ReseñasService {
     public Usuario autenticarUsuario(String nombreUsuario, String contrasenia) throws SQLException {
       Optional<Usuario> usuarioOpt = usuariosDao.buscarPorNombreUsuario(nombreUsuario);
 
-        // 2. Comprobar si el contenedor está lleno
+
         if (usuarioOpt.isPresent()) {
             
-            // 3. ¡CORRECCIÓN! Usar .get() para extraer el objeto del contenedor.
+           
             Usuario usuario = usuarioOpt.get(); 
             
-            // 4. Continuar con la verificación de la contraseña
+            
             if (usuario.getContrasenia().equals(contrasenia)) {
                 return usuario; // Retornamos el objeto Usuario real
             }

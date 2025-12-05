@@ -22,7 +22,7 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
         "EMAIL = ?, " +
         "CONTRASENIA = ?, " +
         "DNI_PERSONA = ?, " +
-        "PELICULAS_RESENADAS = ?, " +
+        "PELICULAS_RESENADAS = ?, "+
         "PRIMER_ACCESO = ? " +
         "WHERE ID = ?";
 
@@ -208,7 +208,7 @@ public class UsuariosDAOjdbc implements UsuariosDAO {
                 }
             }
         }
-
+        
         // 4) Actualizar
         try (PreparedStatement stmt = conexion.prepareStatement(UPDATE_SQL)) {
             stmt.setString(1, usuario.getNombreUsuario());

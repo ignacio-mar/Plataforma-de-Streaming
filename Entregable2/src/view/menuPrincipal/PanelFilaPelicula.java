@@ -8,8 +8,11 @@ import javax.swing.*;
 import model.Pelicula;
 
 public class PanelFilaPelicula extends JPanel {
-
+     private Pelicula pelicula;
+    private JButton btnCalificar;
+    
     public PanelFilaPelicula(Pelicula pelicula) {
+        this.pelicula=pelicula;
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)));
@@ -33,7 +36,7 @@ public class PanelFilaPelicula extends JPanel {
                     lblPoster.setBackground(Color.WHITE);
                 }
             } catch (Exception e) {
-                // si falla, queda el cuadrado gris con "IMG"
+               
             }
         }
         agregarColumna(lblPoster, 0, 0.10);
@@ -63,7 +66,7 @@ public class PanelFilaPelicula extends JPanel {
         agregarColumna(panelLink, 3, 0.40);
 
         // CALIFICAR (15%)
-        JButton btnCalificar = new JButton("CALIFICAR");
+        btnCalificar = new JButton("CALIFICAR");
         btnCalificar.setBackground(new Color(0, 102, 204));
         btnCalificar.setForeground(Color.WHITE);
         btnCalificar.setFont(new Font("Arial", Font.BOLD, 11));
@@ -121,5 +124,21 @@ public class PanelFilaPelicula extends JPanel {
                 "Sinopsis: " + titulo,
                 JOptionPane.INFORMATION_MESSAGE
         );
+
     }
+    public JButton getBtnCalificar() {
+        return btnCalificar;
+    }
+    
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+    public void marcarComoCalificada() {
+        btnCalificar.setEnabled(false);           
+        btnCalificar.setText("Calificado");      
+        btnCalificar.setBackground(Color.GRAY);  
+    }
+
+    
+    
 }

@@ -13,16 +13,17 @@ public class UsuariosService {
     private final DatosPersonalesDAO datosPersonalesDao;
 
 
+   
     public UsuariosService(UsuariosDAO usuariosDao, DatosPersonalesDAO datosPersonalesDao) {
         this.usuariosDao = usuariosDao;
         this.datosPersonalesDao = datosPersonalesDao;
     }
 
+    
     public boolean validarEmail(String email) {
         if (email == null || email.isBlank()) {
             return false;
         }
-        // Validación muy simple de formato
         if (!email.contains("@") || !email.contains(".")) {
             return false;
         }
@@ -53,10 +54,7 @@ public class UsuariosService {
         }
     }
 
-    /**
-     * Valida contraseña: regla básica de longitud mínima.
-     * (Si tu TP tenía una política más compleja, podés ajustarla acá).
-     */
+ 
     public boolean validarContrasenia(String contrasenia) {
         if (contrasenia == null || contrasenia.isBlank()) {
             return false;
@@ -65,13 +63,7 @@ public class UsuariosService {
         return contrasenia.length() >= 6;
     }
 
-    /**
-     * Crea y persiste un usuario nuevo asociado al DNI dado.
-     * Lanza SQLException si falla algo en la BD (DNI inexistente, duplicados, etc.).
-     *
-     * Esta firma coincide con la que el RegistroController está esperando:
-     *  crearUsuario(String nombreUsuario, String email, String contrasenia, int dniPersona)
-     */
+   
     public Usuario crearUsuario(String nombreUsuario,
                                 String email,
                                 String contrasenia,
@@ -82,17 +74,9 @@ public class UsuariosService {
         return usuariosDao.asociarUsuario(usuario);
     }
 
-    // =====================================================
-    // ALTAS (API algo más general, por si la usás en otro lado)
-    // =====================================================
-
     public Usuario registrarUsuario(Usuario usuario) throws SQLException {
         return usuariosDao.asociarUsuario(usuario);
     }
-
-    // =====================================================
-    // BÚSQUEDAS / CONSULTAS
-    // =====================================================
 
     public Optional<Usuario> buscarPorId(int id) throws SQLException {
         return usuariosDao.buscarPorId(id);
@@ -122,31 +106,20 @@ public class UsuariosService {
         return datosPersonalesDao.buscarPorDni(dni).isPresent();
     }
 
-    // =====================================================
-    // ACTUALIZACIÓN (incluye PRIMER_ACCESO y PELICULAS_RESENADAS)
-    // =====================================================
-
-    /**
-     * Actualiza TODOS los datos del usuario en BD:
-     *  - NOMBRE_USUARIO
-     *  - EMAIL
-     *  - CONTRASENIA
-     *  - DNI_PERSONA
-     *  - PELICULAS_RESENADAS
-     *  - PRIMER_ACCESO
-     *
-     * IMPORTANTE: recibe el objeto Usuario YA MODIFICADO
-     * (por ejemplo, con setPrimerAcceso(false)).
-     */
+   
     public boolean actualizarUsuario(Usuario usuario) throws SQLException {
         return usuariosDao.actualizar(usuario);
     }
 
-    // =====================================================
-    // BAJA
-    // =====================================================
-
     public boolean eliminarUsuario(int id) throws SQLException {
         return usuariosDao.eliminar(id);
+    }
+   public void marcarPeliculaComoResenada(Usuario usuario, int idPelicula) throws SQLException {
+       
+        usuario.agregarPeliculaResenada(idPelicula);
+        
+        
+        // Utilizamos el método actualizar que ya guarda la lista serializada
+        usuariosDao.actualizar(usuario);
     }
 }

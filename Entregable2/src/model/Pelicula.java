@@ -71,10 +71,7 @@ public class Pelicula {
         this.posterUrl = posterUrl;
     }
 
-    // ======================
-    // Getters y Setters
-    // ======================
-
+   
     public int getId() {
         return id;
     }

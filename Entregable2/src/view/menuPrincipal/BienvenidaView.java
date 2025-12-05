@@ -82,7 +82,7 @@ public class BienvenidaView extends JFrame {
         gbc.gridy = 1; 
         panelCarga.add(lblImagen, gbc);
 
-        // Texto Inferior: "Un momento, por favor..."
+        // Texto Inferior:
         JLabel lblEspera = new JLabel("Un momento, por favor...", SwingConstants.CENTER);
         lblEspera.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridy = 2; 
@@ -91,7 +91,7 @@ public class BienvenidaView extends JFrame {
         // BARRA DE PROGRESO 
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true); 
-        progressBar.setPreferredSize(new Dimension(300, 25)); // Tamaño fijo para la barra
+        progressBar.setPreferredSize(new Dimension(300, 25)); 
         gbc.gridy = 3; 
         panelCarga.add(progressBar, gbc);
         

@@ -92,7 +92,7 @@ public class PeliculasService {
     public void importarDesdeCsv(String rutaCsv) throws IOException, SQLException {
         importarDesdeCsv(rutaCsv, null);
     }
-
+   
     public void importarDesdeCsv(String rutaCsv, Consumer<Integer> onProgress) throws IOException, SQLException {
         cachePeliculas.clear();
 
@@ -161,11 +161,16 @@ public class PeliculasService {
                 if (onProgress != null && total > 0) {
                     int porc = (count * 100) / total;
                     onProgress.accept(Math.min(porc, 100));
+                  
                 }
             }
         }
+        
 
         ordenarCachePorRatingDesc();
+        if (onProgress != null) {
+            onProgress.accept(100);
+        }
     }
 
     public void importarDesdeCsvAsync(String rutaCsv,
